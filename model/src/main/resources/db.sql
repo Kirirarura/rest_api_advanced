@@ -45,19 +45,16 @@ DROP TABLE IF EXISTS `gift_certificates`.`gift_certificate_has_tag`;
 
 CREATE TABLE IF NOT EXISTS `gift_certificates`.`gift_certificate_has_tag`
 (
-    `gift_certificate_id` INT NOT NULL,
-    `tag_id`              INT NOT NULL,
-    PRIMARY KEY (`gift_certificate_id`, `tag_id`),
-    INDEX `fk_gift_certificate_has_tag_tag1_idx` (`tag_id` ASC) VISIBLE,
-    INDEX `fk_gift_certificate_has_tag_gift_certificate_idx` (`gift_certificate_id` ASC) VISIBLE,
-    CONSTRAINT `fk_gift_certificate_has_tag_gift_certificate`
-        FOREIGN KEY (`gift_certificate_id`)
-            REFERENCES `gift_certificates`.`gift_certificate` (`id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_gift_certificate_has_tag_tag1`
-        FOREIGN KEY (`tag_id`)
-            REFERENCES `gift_certificates`.`tag` (`id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
+    `id`                  INT AUTO_INCREMENT,
+    `gift_certificate_id` INT,
+    `tag_id`              INT,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`gift_certificate_id`)
+        REFERENCES `gift_certificates`.`gift_certificate` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (`tag_id`)
+        REFERENCES `gift_certificates`.`tag` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
