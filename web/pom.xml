@@ -13,6 +13,19 @@
     <packaging>war</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>com.epam.esm</groupId>
+            <artifactId>service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.epam.esm</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
         <dependency>
@@ -53,6 +66,7 @@
             <artifactId>spring-jdbc</artifactId>
             <version>5.3.10</version>
         </dependency>
+
     </dependencies>
 
 </project>
