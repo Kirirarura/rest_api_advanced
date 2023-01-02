@@ -14,14 +14,15 @@ public abstract class AbstractDao<T> {
     protected final String getAllQuery;
     private final RowMapper<T> rowMapper;
     private final JdbcTemplate jdbcTemplate;
+    private static final String SELECT_ALL_FROM = "SELECT * FROM ";
 
     protected AbstractDao(RowMapper<T> rowMapper,String tableName, JdbcTemplate jdbcTemplate) {
         this.rowMapper = rowMapper;
         this.jdbcTemplate = jdbcTemplate;
 
-        getAllQuery = "SELECT * FROM " + tableName;
-        findByIdQuery = "SELECT * FROM " + tableName + " WHERE id=?";
-        findByColumnQuery = "SELECT * FROM " + tableName + " WHERE %s=?";
+        getAllQuery =  SELECT_ALL_FROM + tableName;
+        findByIdQuery = SELECT_ALL_FROM + tableName + " WHERE id=?";
+        findByColumnQuery = SELECT_ALL_FROM + tableName + " WHERE %s=?";
         deleteByIdQuery = "DELETE FROM " + tableName + " WHERE id=?";
     }
 

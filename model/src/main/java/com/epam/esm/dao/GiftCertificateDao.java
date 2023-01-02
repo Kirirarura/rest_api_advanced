@@ -13,7 +13,9 @@ public interface GiftCertificateDao {
     void createCertificateTagReference(long certificateId, long tagId);
 
     List<GiftCertificate> getAll();
+    Optional<GiftCertificate> findById(long id);
 
     Optional<GiftCertificate> findByName(String name);
+    void deleteById(long id);
 
 }

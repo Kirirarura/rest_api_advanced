@@ -2,6 +2,10 @@ package com.epam.esm.controllers;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.NoSuchEntityException;
+import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,9 +32,15 @@ public class GiftCertificatesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestBody GiftCertificateDto giftCertificateDto) {
-        giftCertificateService.create(giftCertificateDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Success");
+    public ResponseEntity create(@RequestBody GiftCertificateDto giftCertificateDto) throws DaoException, DuplicateEntityException, InvalidEntityException {
+        long id = giftCertificateService.create(giftCertificateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteGiftCertificate(@PathVariable long id) throws NoSuchEntityException {
+        giftCertificateService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
 }

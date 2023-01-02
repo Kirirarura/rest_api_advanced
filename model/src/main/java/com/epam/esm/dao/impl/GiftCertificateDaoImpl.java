@@ -8,16 +8,16 @@ import com.epam.esm.exceptions.DaoException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 import static com.epam.esm.exceptions.ExceptionDaoMessages.*;
 
-@Component
+@Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao {
 
-    private static final String TABLE_NAME = "gift_certificate";
+    private static final String TABLE_NAME = "gift_certificates";
 
     private static final RowMapper<GiftCertificate> ROW_MAPPER =
             (rs, rowNum) -> new GiftCertificate(

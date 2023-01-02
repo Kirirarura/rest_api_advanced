@@ -3,6 +3,10 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.NoSuchEntityException;
+import com.epam.esm.exceptions.DaoException;
 
 import java.util.List;
 
@@ -11,6 +15,7 @@ import java.util.List;
  */
 public interface GiftCertificateService {
 
-    long create(GiftCertificateDto giftCertificateDto);
+    long create(GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, DuplicateEntityException;
     List<GiftCertificate> getAll();
+    void deleteById(Long id) throws NoSuchEntityException;
 }
