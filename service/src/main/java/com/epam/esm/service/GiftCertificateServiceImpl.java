@@ -40,6 +40,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.deleteById(id);
     }
 
+    @Override
+    public GiftCertificate getById(Long id) throws NoSuchEntityException {
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.findById(id);
+        if (!optionalGiftCertificate.isPresent()){
+            throw new NoSuchEntityException("certificate.not.found");
+        }
+        return optionalGiftCertificate.get();
+    }
+
 
     @Override
     @Transactional

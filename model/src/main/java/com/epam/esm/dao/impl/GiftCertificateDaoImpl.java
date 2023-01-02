@@ -49,7 +49,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     }
 
     @Override
-    public void createCertificateTagReference(long certificateId, long tagId) {
+    public void createCertificateTagReference(Long certificateId, Long tagId) {
 
     }
 

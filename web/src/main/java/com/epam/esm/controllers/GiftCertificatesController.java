@@ -30,6 +30,12 @@ public class GiftCertificatesController {
         return giftCertificateService.getAll();
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificate getById(@PathVariable("id") Long id) throws NoSuchEntityException {
+        return giftCertificateService.getById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity create(@RequestBody GiftCertificateDto giftCertificateDto) throws DaoException, DuplicateEntityException, InvalidEntityException {
@@ -38,7 +44,7 @@ public class GiftCertificatesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteGiftCertificate(@PathVariable long id) throws NoSuchEntityException {
+    public ResponseEntity deleteGiftCertificate(@PathVariable("id") Long id) throws NoSuchEntityException {
         giftCertificateService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
     }

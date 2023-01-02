@@ -10,12 +10,12 @@ public interface GiftCertificateDao {
 
     void create(GiftCertificate giftCertificate) throws DaoException;
 
-    void createCertificateTagReference(long certificateId, long tagId);
+    void createCertificateTagReference(Long certificateId, Long tagId);
 
     List<GiftCertificate> getAll();
-    Optional<GiftCertificate> findById(long id);
+    Optional<GiftCertificate> findById(Long id);
 
     Optional<GiftCertificate> findByName(String name);
-    void deleteById(long id);
+    void deleteById(Long id);
 
 }

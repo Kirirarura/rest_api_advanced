@@ -30,12 +30,12 @@ public abstract class AbstractDao<T> {
         return jdbcTemplate.query(getAllQuery, rowMapper);
     }
 
-    public Optional<T> findById(long id) {
+    public Optional<T> findById(Long id) {
         return jdbcTemplate.query(findByIdQuery, rowMapper, id)
                 .stream().findAny();
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         jdbcTemplate.update(deleteByIdQuery, id);
     }
 
