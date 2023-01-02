@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface GiftCertificateService {
 
-    long create(GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, DuplicateEntityException;
+    Long create(GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, DuplicateEntityException;
     List<GiftCertificate> getAll();
     void deleteById(Long id) throws NoSuchEntityException;
     GiftCertificate getById(Long id) throws NoSuchEntityException;

@@ -39,7 +39,7 @@ public class GiftCertificatesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity create(@RequestBody GiftCertificateDto giftCertificateDto) throws DaoException, DuplicateEntityException, InvalidEntityException {
-        long id = giftCertificateService.create(giftCertificateDto);
+        Long id = giftCertificateService.create(giftCertificateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 

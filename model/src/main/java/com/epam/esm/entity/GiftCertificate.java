@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class GiftCertificate {
 
-    private long id;
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;
@@ -19,7 +19,7 @@ public class GiftCertificate {
     public GiftCertificate() {
     }
 
-    public GiftCertificate(long id, String name, String description, BigDecimal price,
+    public GiftCertificate(Long id, String name, String description, BigDecimal price,
                            int duration, String createDate, String lastUpdateDate) {
         this.id = id;
         this.name = name;
@@ -30,7 +30,7 @@ public class GiftCertificate {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

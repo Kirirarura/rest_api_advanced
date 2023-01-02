@@ -52,7 +52,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public long create(GiftCertificateDto giftCertificateDto)
+    public Long create(GiftCertificateDto giftCertificateDto)
             throws DaoException, InvalidEntityException, DuplicateEntityException {
 
         GiftCertificate giftCertificate = giftCertificateDto.getGiftCertificate();
@@ -64,23 +64,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.create(giftCertificate);
         String certificateName = giftCertificate.getName();
 
-        long certificateId = giftCertificateDao.findByName(certificateName)
+        return giftCertificateDao.findByName(certificateName)
                 .map(GiftCertificate::getId).orElse(-1L);
-
-        return certificateId;
     }
 
     private void checkCertificate(GiftCertificate giftCertificate)
             throws InvalidEntityException, DuplicateEntityException {
 
         if (!GiftCertificateValidator.isValid(giftCertificate)) {
-            throw new InvalidEntityException("Invalid certificate data");
+            throw new InvalidEntityException("certificate.invalid");
         }
 
         String name = giftCertificate.getName();
         Optional<GiftCertificate> optionalName = giftCertificateDao.findByName(name);
         if (optionalName.isPresent()){
-            throw new DuplicateEntityException("Such certificate is already exists");
+            throw new DuplicateEntityException("certificate.already.exist");
         }
     }
 
