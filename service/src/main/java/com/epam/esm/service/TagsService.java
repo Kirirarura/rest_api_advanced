@@ -12,9 +12,9 @@ public interface TagsService {
 
     Long create(Tag tag) throws DuplicateEntityException, InvalidEntityException, DaoException;
 
-    List<Tag> getAll();
+    List<Tag> getAll() throws DaoException;
 
-    Tag getById(long id) throws NoSuchEntityException;
+    Tag getById(long id) throws NoSuchEntityException, DaoException;
 
-    void deleteById(long id) throws NoSuchEntityException;
+    void deleteById(long id) throws NoSuchEntityException, DaoException;
 }

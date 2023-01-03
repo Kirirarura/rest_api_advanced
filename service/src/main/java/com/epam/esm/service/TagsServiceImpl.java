@@ -9,7 +9,6 @@ import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.validators.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +24,6 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    @Transactional
     public Long create(Tag tag) throws DuplicateEntityException, InvalidEntityException, DaoException {
         checkTag(tag);
         String tagName = tag.getName();
@@ -35,7 +33,7 @@ public class TagsServiceImpl implements TagsService{
                 .map(Tag::getId).orElse(-1L);
     }
 
-    private void checkTag(Tag tag) throws InvalidEntityException, DuplicateEntityException {
+    private void checkTag(Tag tag) throws InvalidEntityException, DuplicateEntityException, DaoException {
         if (!TagValidator.isValid(tag)){
             throw new InvalidEntityException("tag.invalid");
         }
@@ -47,12 +45,12 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    public List<Tag> getAll() {
+    public List<Tag> getAll() throws DaoException {
         return tagDao.getAll();
     }
 
     @Override
-    public Tag getById(long id) throws NoSuchEntityException {
+    public Tag getById(long id) throws NoSuchEntityException, DaoException {
         Optional<Tag> optionalTag = tagDao.findById(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException("tag.not.found");
@@ -61,7 +59,7 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    public void deleteById(long id) throws NoSuchEntityException {
+    public void deleteById(long id) throws NoSuchEntityException, DaoException {
         Optional<Tag> optionalTag = tagDao.findById(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException("tag.not.found");

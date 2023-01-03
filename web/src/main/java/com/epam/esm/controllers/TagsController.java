@@ -25,7 +25,7 @@ public class TagsController {
     }
 
     @GetMapping
-    public List<Tag> getAll(){
+    public List<Tag> getAll() throws DaoException {
         return tagsService.getAll();
     }
 
@@ -39,12 +39,12 @@ public class TagsController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Tag getById(@PathVariable("id") Long id) throws NoSuchEntityException {
+    public Tag getById(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException {
         return tagsService.getById(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteById(@PathVariable Long id) throws NoSuchEntityException {
+    public ResponseEntity<Long> deleteById(@PathVariable Long id) throws NoSuchEntityException, DaoException {
         tagsService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
     }
