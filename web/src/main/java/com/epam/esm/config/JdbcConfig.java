@@ -8,10 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableTransactionManagement
 @PropertySource("classpath:database.properties")
 public class JdbcConfig {
 
@@ -54,6 +58,11 @@ public class JdbcConfig {
     @Bean
     public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(JdbcTemplate jdbcTemplate) {
         return new NamedParameterJdbcTemplate((jdbcTemplate));
+    }
+
+    @Bean
+    public PlatformTransactionManager txManager(){
+        return new DataSourceTransactionManager(dataSource(getHikariConfig()));
     }
 
 
