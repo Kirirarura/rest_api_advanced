@@ -1,7 +1,5 @@
 package com.epam.esm.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -15,7 +13,6 @@ public class GiftCertificate {
     private String createDate;
     private String lastUpdateDate;
 
-    @JsonCreator
     public GiftCertificate() {
     }
 
@@ -91,7 +88,7 @@ public class GiftCertificate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return getId() == that.getId() &&
+        return getId().equals(that.getId()) &&
                 getDuration() == that.getDuration() &&
                 getName().equals(that.getName()) &&
                 getDescription().equals(that.getDescription()) &&

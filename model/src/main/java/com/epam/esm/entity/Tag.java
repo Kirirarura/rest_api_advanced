@@ -1,13 +1,10 @@
 package com.epam.esm.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.util.Objects;
 
 public class Tag {
     private Long id;
     private String name;
-    @JsonCreator
     public Tag() {
     }
 
@@ -37,7 +34,7 @@ public class Tag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return getId() == tag.getId() && Objects.equals(getName(), tag.getName());
+        return getId().equals(tag.getId()) && Objects.equals(getName(), tag.getName());
     }
 
     @Override
