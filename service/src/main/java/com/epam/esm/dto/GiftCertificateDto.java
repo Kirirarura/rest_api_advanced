@@ -2,6 +2,7 @@ package com.epam.esm.dto;
 
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,14 @@ public class GiftCertificateDto {
 
     private List<Tag> certificateTags = new ArrayList<>();
 
+    @JsonCreator
     public GiftCertificateDto() {
     }
 
-    public GiftCertificateDto(GiftCertificate giftCertificate) {
+    public GiftCertificateDto(GiftCertificate giftCertificate, List<Tag> certificateTags) {
         this.giftCertificate = giftCertificate;
+        this.certificateTags = certificateTags;
     }
-
 
     public GiftCertificate getGiftCertificate() {
         return giftCertificate;

@@ -28,7 +28,7 @@ import static com.epam.esm.exceptions.ExceptionDaoMessages.*;
 @Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao {
 
-    private static final Logger log = LoggerFactory.getLogger(TagDaoImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(GiftCertificateDaoImpl.class);
     private static final String TABLE_NAME = "gift_certificates";
     private final TagDao tagDao;
 
@@ -90,7 +90,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
             Optional<Tag> tagWithId = Optional.empty();
 
             try {
-                tagWithId = tagDao.findByName(tagName);
+                tagWithId = tagDao.getByName(tagName);
             } catch (DaoException e) {
                 e.printStackTrace();
             }
@@ -101,7 +101,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     }
 
     @Override
-    public Optional<GiftCertificate> findByName(String name) throws DaoException {
+    public Optional<GiftCertificate> getByName(String name) throws DaoException {
         return findByColumn("name", name);
     }
 }

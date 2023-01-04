@@ -9,6 +9,7 @@ import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.validators.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,21 +25,20 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
+    @Transactional
     public Long create(Tag tag) throws DuplicateEntityException, InvalidEntityException, DaoException {
         checkTag(tag);
         String tagName = tag.getName();
         tagDao.create(tag);
 
-        return tagDao.findByName(tagName)
+        return tagDao.getByName(tagName)
                 .map(Tag::getId).orElse(-1L);
     }
 
     private void checkTag(Tag tag) throws InvalidEntityException, DuplicateEntityException, DaoException {
-        if (!TagValidator.isValid(tag)){
-            throw new InvalidEntityException("tag.invalid");
-        }
+        TagValidator.isValid(tag);
         String name = tag.getName();
-        Optional<Tag> optionalName = tagDao.findByName(name);
+        Optional<Tag> optionalName = tagDao.getByName(name);
         if (optionalName.isPresent()){
             throw new DuplicateEntityException("tag.already.exist");
         }
@@ -50,8 +50,8 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    public Tag getById(long id) throws NoSuchEntityException, DaoException {
-        Optional<Tag> optionalTag = tagDao.findById(id);
+    public Tag getById(Long id) throws NoSuchEntityException, DaoException {
+        Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException("tag.not.found");
         }
@@ -59,11 +59,12 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    public void deleteById(long id) throws NoSuchEntityException, DaoException {
-        Optional<Tag> optionalTag = tagDao.findById(id);
+    public Long deleteById(Long id) throws NoSuchEntityException, DaoException {
+        Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException("tag.not.found");
         }
         tagDao.deleteById(id);
+        return id;
     }
 }

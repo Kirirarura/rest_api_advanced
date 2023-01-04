@@ -1,10 +1,14 @@
 package com.epam.esm.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.Objects;
 
 public class Tag {
     private Long id;
     private String name;
+
+    @JsonCreator
     public Tag() {
     }
 

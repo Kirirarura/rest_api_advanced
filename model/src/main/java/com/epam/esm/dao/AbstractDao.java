@@ -39,7 +39,7 @@ public abstract class AbstractDao<T> {
 
     }
 
-    public Optional<T> findById(Long id) throws DaoException {
+    public Optional<T> getById(Long id) throws DaoException {
         try {
             return jdbcTemplate.query(findByIdQuery, rowMapper, id)
                     .stream().findAny();
@@ -48,13 +48,13 @@ public abstract class AbstractDao<T> {
         }
     }
 
-    public void deleteById(Long id) throws DaoException {
+    public Long deleteById(Long id) throws DaoException {
         try {
             jdbcTemplate.update(deleteByIdQuery, id);
         } catch (DataAccessException e) {
             throw new DaoException(NO_ENTITY_WITH_ID);
         }
-
+        return id;
     }
 
     public Optional<T> findByColumn(String columnName, String value) throws DaoException {

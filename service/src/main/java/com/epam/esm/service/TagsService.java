@@ -14,7 +14,7 @@ public interface TagsService {
 
     List<Tag> getAll() throws DaoException;
 
-    Tag getById(long id) throws NoSuchEntityException, DaoException;
+    Tag getById(Long id) throws NoSuchEntityException, DaoException;
 
-    void deleteById(long id) throws NoSuchEntityException, DaoException;
+    Long deleteById(Long id) throws NoSuchEntityException, DaoException;
 }

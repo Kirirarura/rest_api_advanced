@@ -43,7 +43,7 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     }
 
     @Override
-    public Optional<Tag> findByName(String name) throws DaoException {
+    public Optional<Tag> getByName(String name) throws DaoException {
         return findByColumn("name", name);
     }
 }

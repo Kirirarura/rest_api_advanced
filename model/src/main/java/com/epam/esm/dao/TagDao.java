@@ -12,9 +12,9 @@ public interface TagDao {
 
     List<Tag> getAll() throws DaoException;
 
-    Optional<Tag> findById(Long id) throws DaoException;
+    Optional<Tag> getById(Long id) throws DaoException;
 
-    Optional<Tag> findByName(String name) throws DaoException;
+    Optional<Tag> getByName(String name) throws DaoException;
 
-    void deleteById(Long id) throws DaoException;
+    Long deleteById(Long id) throws DaoException;
 }
