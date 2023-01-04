@@ -30,29 +30,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.tagDao = tagDao;
     }
 
-    public List<GiftCertificate> getAll() throws DaoException {
-        return giftCertificateDao.getAll();
-    }
-
-    @Override
-    public void deleteById(Long id) throws NoSuchEntityException, DaoException {
-        Optional<GiftCertificate> certificateOptional = giftCertificateDao.findById(id);
-        if (!certificateOptional.isPresent()) {
-            throw new NoSuchEntityException("certificate.not.found");
-        }
-        giftCertificateDao.deleteById(id);
-    }
-
-    @Override
-    public GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException {
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.findById(id);
-        if (!optionalGiftCertificate.isPresent()){
-            throw new NoSuchEntityException("certificate.not.found");
-        }
-        return optionalGiftCertificate.get();
-    }
-
-
     @Override
     @Transactional(rollbackFor = DaoException.class)
     public Long create(GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, DuplicateEntityException {
@@ -68,19 +45,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.create(giftCertificate, requestTags);
 
         String certificateName = giftCertificate.getName();
-        return giftCertificateDao.findByName(certificateName)
+        return giftCertificateDao.getByName(certificateName)
                 .map(GiftCertificate::getId).orElse(-1L);
     }
 
     private void checkCertificate(GiftCertificate giftCertificate)
             throws InvalidEntityException, DuplicateEntityException, DaoException {
 
-        if (!GiftCertificateValidator.isValid(giftCertificate)) {
-            throw new InvalidEntityException("certificate.invalid");
-        }
+        GiftCertificateValidator.isValid(giftCertificate);
 
         String name = giftCertificate.getName();
-        Optional<GiftCertificate> optionalName = giftCertificateDao.findByName(name);
+        Optional<GiftCertificate> optionalName = giftCertificateDao.getByName(name);
         if (optionalName.isPresent()){
             throw new DuplicateEntityException("certificate.already.exist");
         }
@@ -104,4 +79,26 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
     }
 
+    public List<GiftCertificate> getAll() throws DaoException {
+        return giftCertificateDao.getAll();
+    }
+
+    @Override
+    public GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException {
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(id);
+        if (!optionalGiftCertificate.isPresent()){
+            throw new NoSuchEntityException("certificate.not.found");
+        }
+        return optionalGiftCertificate.get();
+    }
+
+    @Override
+    public Long deleteById(Long id) throws NoSuchEntityException, DaoException {
+        Optional<GiftCertificate> certificateOptional = giftCertificateDao.getById(id);
+        if (!certificateOptional.isPresent()) {
+            throw new NoSuchEntityException("certificate.not.found");
+        }
+        giftCertificateDao.deleteById(id);
+        return id;
+    }
 }

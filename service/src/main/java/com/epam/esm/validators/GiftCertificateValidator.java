@@ -1,6 +1,7 @@
 package com.epam.esm.validators;
 
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.exception.InvalidEntityException;
 
 import java.math.BigDecimal;
 
@@ -15,28 +16,46 @@ public class GiftCertificateValidator {
     private GiftCertificateValidator() {
     }
 
-    public static boolean isValid(GiftCertificate giftCertificate){
-        return isNameValid(giftCertificate.getName()) &&
-                isPriceValid(giftCertificate.getPrice()) &&
-                isDurationValid(giftCertificate.getDuration());
+    public static void isValid(GiftCertificate giftCertificate) throws InvalidEntityException {
+        isNameValid(giftCertificate.getName());
+        isPriceValid(giftCertificate.getPrice());
+        isDurationValid(giftCertificate.getDuration());
     }
 
-    private static boolean isNameValid(String name) {
+    public static void isValidForUpdate(GiftCertificate giftCertificate) throws InvalidEntityException {
+        if (giftCertificate.getName() != null) {
+            isNameValid(giftCertificate.getName());
+        }
+        if (giftCertificate.getPrice() != null) {
+            isPriceValid(giftCertificate.getPrice());
+        }
+        if (giftCertificate.getDuration() != 0) {
+            isDurationValid(giftCertificate.getDuration());
+        }
+    }
+
+
+    private static void isNameValid(String name) throws InvalidEntityException {
         if (name == null) {
-            return false;
+            throw new InvalidEntityException("certificate.null");
         }
-        return name.length() >= NAME_MIN_LENGTH && name.length() <= NAME_MAX_LENGTH;
+        if (!(name.length() >= NAME_MIN_LENGTH && name.length() <= NAME_MAX_LENGTH)) {
+            throw new InvalidEntityException("certificate.invalid.name");
+        }
     }
 
-    private static boolean isPriceValid(BigDecimal price) {
+    private static void isPriceValid(BigDecimal price) throws InvalidEntityException {
         if (price == null) {
-            return false;
+            throw new InvalidEntityException("certificate.null");
         }
-        return price.compareTo(PRICE_MIN_VALUE) >= 0 &&
-                price.compareTo(PRICE_MAX_VALUE) <= 0;
+        if (!(price.compareTo(PRICE_MIN_VALUE) >= 0 && price.compareTo(PRICE_MAX_VALUE) <= 0)) {
+            throw new InvalidEntityException("certificate.invalid.price");
+        }
     }
 
-    private static boolean isDurationValid(int duration) {
-        return duration >= DURATION_MIN_VALUE;
+    private static void isDurationValid(int duration) throws InvalidEntityException {
+        if ((duration < DURATION_MIN_VALUE)) {
+            throw new InvalidEntityException("certificate.invalid.duration");
+        }
     }
 }
