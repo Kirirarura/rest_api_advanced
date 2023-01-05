@@ -4,9 +4,11 @@ import com.epam.esm.dao.AbstractDao;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.query.Queries;
+import com.epam.esm.dao.query.QueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exceptions.DaoException;
+import com.epam.esm.extractor.GiftCertificateExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -21,9 +23,10 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import static com.epam.esm.exceptions.ExceptionDaoMessages.*;
+import static com.epam.esm.exceptions.DaoExceptionMessageCodes.*;
 
 @Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao {
@@ -31,6 +34,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     private static final Logger log = LoggerFactory.getLogger(GiftCertificateDaoImpl.class);
     private static final String TABLE_NAME = "gift_certificates";
     private final TagDao tagDao;
+    private final GiftCertificateExtractor giftCertificateExtractor;
+    private final QueryBuilder queryBuilder;
 
     private static final RowMapper<GiftCertificate> ROW_MAPPER =
             (rs, rowNum) -> new GiftCertificate(
@@ -44,9 +49,11 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
 
     private final JdbcTemplate jdbcTemplate;
 
-    public GiftCertificateDaoImpl(TagDao tagDao, JdbcTemplate jdbcTemplate) {
+    public GiftCertificateDaoImpl(TagDao tagDao, GiftCertificateExtractor giftCertificateExtractor, QueryBuilder queryBuilder, JdbcTemplate jdbcTemplate) {
         super(ROW_MAPPER, TABLE_NAME, jdbcTemplate);
         this.tagDao = tagDao;
+        this.giftCertificateExtractor = giftCertificateExtractor;
+        this.queryBuilder = queryBuilder;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -103,5 +110,19 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     @Override
     public Optional<GiftCertificate> getByName(String name) throws DaoException {
         return findByColumn("name", name);
+    }
+
+    @Override
+    @Transactional
+    public void update(GiftCertificate giftCertificate, List<Tag> certificateTags) throws DaoException {
+
+        Map<String, String> updateFields = giftCertificateExtractor.extract(giftCertificate);
+        String query = queryBuilder.createUpdateQuery(updateFields, TABLE_NAME);
+        try{
+            executeUpdateQuery(query);
+            updateTags(certificateTags, giftCertificate.getId());
+        } catch (DataAccessException e) {
+            throw new DaoException(NO_ENTITY_WITH_ID);
+        }
     }
 }

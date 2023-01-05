@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.esm.exceptions.ExceptionDaoMessages.*;
+import static com.epam.esm.exceptions.DaoExceptionMessageCodes.*;
 
 public abstract class AbstractDao<T> {
 

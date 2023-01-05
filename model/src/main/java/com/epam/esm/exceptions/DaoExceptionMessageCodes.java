@@ -1,8 +1,8 @@
 package com.epam.esm.exceptions;
 
-public class ExceptionDaoMessages {
+public class DaoExceptionMessageCodes {
 
-    private ExceptionDaoMessages() {
+    private DaoExceptionMessageCodes() {
     }
 
     public static final String NO_ENTITY = "404000";

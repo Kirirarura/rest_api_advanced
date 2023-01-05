@@ -14,4 +14,5 @@ public interface GiftCertificateDao {
     Optional<GiftCertificate> getById(Long id) throws DaoException;
     Optional<GiftCertificate> getByName(String name) throws DaoException;
     Long deleteById(Long id) throws DaoException;
+    void update(GiftCertificate giftCertificate, List<Tag> certificateTags) throws DaoException;
 }

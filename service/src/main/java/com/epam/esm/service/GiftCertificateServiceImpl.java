@@ -7,6 +7,7 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.validators.GiftCertificateValidator;
@@ -31,7 +32,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    @Transactional(rollbackFor = DaoException.class)
+    @Transactional(rollbackFor = Exception.class)
     public Long create(GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, DuplicateEntityException {
 
         GiftCertificate giftCertificate = giftCertificateDto.getGiftCertificate();
@@ -61,24 +62,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
     }
 
-    private void saveNewTags(List<Tag> requestTags, List<Tag> createdTags) throws DaoException {
-        if (requestTags == null) {
-            return;
-        }
-        for (Tag requestTag : requestTags) {
-            boolean isExist = false;
-            for (Tag createdTag : createdTags) {
-                if (Objects.equals(requestTag.getName(), createdTag.getName())) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                tagDao.create(requestTag);
-            }
-        }
-    }
-
     public List<GiftCertificate> getAll() throws DaoException {
         return giftCertificateDao.getAll();
     }
@@ -100,5 +83,42 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         giftCertificateDao.deleteById(id);
         return id;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long update(Long id, GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, InvalidIdException {
+        if (id < 1){
+            throw new InvalidIdException("certificate.invalid.id");
+        }
+        GiftCertificate giftCertificate = giftCertificateDto.getGiftCertificate();
+        giftCertificateDto.getGiftCertificate().setId(id);
+
+        GiftCertificateValidator.isValidForUpdate(giftCertificate);
+
+        giftCertificate.setLastUpdateDate(String.valueOf(LocalDateTime.now()));
+        List<Tag> requestTags = giftCertificateDto.getCertificateTags();
+        List<Tag> createdTags = tagDao.getAll();
+        saveNewTags(requestTags, createdTags);
+        giftCertificateDao.update(giftCertificateDto.getGiftCertificate(), requestTags);
+        return id;
+    }
+
+    private void saveNewTags(List<Tag> requestTags, List<Tag> createdTags) throws DaoException {
+        if (requestTags == null) {
+            return;
+        }
+        for (Tag requestTag : requestTags) {
+            boolean isExist = false;
+            for (Tag createdTag : createdTags) {
+                if (Objects.equals(requestTag.getName(), createdTag.getName())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                tagDao.create(requestTag);
+            }
+        }
     }
 }

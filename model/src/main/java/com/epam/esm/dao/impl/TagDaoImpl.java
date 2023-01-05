@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.epam.esm.exceptions.ExceptionDaoMessages.SAVING_ERROR;
+import static com.epam.esm.exceptions.DaoExceptionMessageCodes.SAVING_ERROR;
 
 
 @Repository

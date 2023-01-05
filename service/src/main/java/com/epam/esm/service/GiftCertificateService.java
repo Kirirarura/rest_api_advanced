@@ -5,6 +5,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 
@@ -19,4 +20,5 @@ public interface GiftCertificateService {
     List<GiftCertificate> getAll() throws DaoException;
     GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException;
     Long deleteById(Long id) throws NoSuchEntityException, DaoException;
+    Long update(Long id, GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, InvalidIdException;
 }

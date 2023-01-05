@@ -4,6 +4,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.service.GiftCertificateService;
@@ -46,6 +47,14 @@ public class GiftCertificatesController {
     public ResponseEntity<Long> deleteGiftCertificate(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException {
         giftCertificateService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Long> updateGiftCertificate(@PathVariable("id") Long id,
+                                                      @RequestBody GiftCertificateDto giftCertificateDto)
+            throws DaoException, InvalidEntityException, InvalidIdException {
+        Long resultId = giftCertificateService.update(id, giftCertificateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resultId);
     }
 
 }
