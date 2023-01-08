@@ -11,6 +11,7 @@ import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.validators.GiftCertificateValidator;
+import com.epam.esm.validators.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +68,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException {
+    public GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
+        IdValidator.checkForInvalidId(id);
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(id);
         if (!optionalGiftCertificate.isPresent()){
             throw new NoSuchEntityException("40401", id);
@@ -76,7 +78,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Long deleteById(Long id) throws NoSuchEntityException, DaoException {
+    public Long deleteById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
+        IdValidator.checkForInvalidId(id);
         Optional<GiftCertificate> certificateOptional = giftCertificateDao.getById(id);
         if (!certificateOptional.isPresent()) {
             throw new NoSuchEntityException("40401");
@@ -88,9 +91,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long update(Long id, GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, InvalidIdException {
-        if (id < 1){
-            throw new InvalidIdException("40005", id);
-        }
+        IdValidator.checkForInvalidId(id);
         GiftCertificate giftCertificate = giftCertificateDto.getGiftCertificate();
         giftCertificateDto.getGiftCertificate().setId(id);
 
@@ -103,6 +104,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.update(giftCertificateDto.getGiftCertificate(), requestTags);
         return id;
     }
+
+
 
     @Override
     public List<GiftCertificate> doFilter(Map<String, String> map) throws DaoException {
@@ -126,4 +129,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             }
         }
     }
+
 }
+
+

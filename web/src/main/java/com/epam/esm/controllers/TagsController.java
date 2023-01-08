@@ -3,6 +3,7 @@ package com.epam.esm.controllers;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.service.TagsService;
@@ -39,12 +40,12 @@ public class TagsController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Tag getById(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException {
+    public Tag getById(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         return tagsService.getById(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteById(@PathVariable Long id) throws NoSuchEntityException, DaoException {
+    public ResponseEntity<Long> deleteById(@PathVariable Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         tagsService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
     }

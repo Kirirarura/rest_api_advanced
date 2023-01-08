@@ -4,8 +4,10 @@ import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
 import com.epam.esm.exception.InvalidEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
+import com.epam.esm.validators.IdValidator;
 import com.epam.esm.validators.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +52,8 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    public Tag getById(Long id) throws NoSuchEntityException, DaoException {
+    public Tag getById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
+        IdValidator.checkForInvalidId(id);
         Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException("40402");
@@ -59,7 +62,8 @@ public class TagsServiceImpl implements TagsService{
     }
 
     @Override
-    public Long deleteById(Long id) throws NoSuchEntityException, DaoException {
+    public Long deleteById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
+        IdValidator.checkForInvalidId(id);
         Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException("40402");

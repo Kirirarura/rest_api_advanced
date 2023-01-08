@@ -6,6 +6,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static com.epam.esm.constants.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -71,7 +70,7 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void testGetById() throws DaoException, NoSuchEntityException {
+    void testGetById() throws DaoException, NoSuchEntityException, InvalidIdException {
         when(giftCertificateDao.getById(GIFT_CERTIFICATE_DTO_2.getGiftCertificate().getId()))
                 .thenReturn(Optional.of(GIFT_CERTIFICATE_2));
 
@@ -88,9 +87,18 @@ class GiftCertificateServiceImplTest {
         assertThrows(NoSuchEntityException.class, () -> giftCertificateService.getById(
                 GIFT_CERTIFICATE_DTO_2.getGiftCertificate().getId()));
     }
+    @Test
+    void testGetByIdInvalidId() throws DaoException {
+        when(giftCertificateDao.getById(-1L))
+                .thenThrow(InvalidIdException.class);
+
+        assertThrows(InvalidIdException.class, () -> giftCertificateService.getById(
+                -1L));
+    }
+
 
     @Test
-    void testDeleteById() throws DaoException, NoSuchEntityException {
+    void testDeleteById() throws DaoException, NoSuchEntityException, InvalidIdException {
         when(giftCertificateDao.deleteById(GIFT_CERTIFICATE_3.getId())).thenReturn(3L);
         when(giftCertificateDao.getById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_3));
 
@@ -122,5 +130,43 @@ class GiftCertificateServiceImplTest {
         assertEquals(DuplicateEntityException.class, assertThrows(
                 InvocationTargetException.class, () -> getCheckCertificateMethod().invoke(
                         giftCertificateService, GIFT_CERTIFICATE_1)).getCause().getClass());
+    }
+
+    @Test
+    void testDoFilterFindAll() throws DaoException {
+        Map<String, String> allRequestParams = new HashMap<>();
+        allRequestParams.put(TAG_NAME,null);
+        allRequestParams.put(PART_OF_NAME, "giftCertifi");
+        allRequestParams.put(PART_OF_DESCRIPTION,null);
+        allRequestParams.put(PART_OF_TAG_NAME, null);
+        allRequestParams.put(SORT_BY_NAME,null);
+        allRequestParams.put(SORT_BY_CREATE_DATE, null);
+        allRequestParams.put(SORT_BY_TAG_NAME, null);
+
+        List<GiftCertificate> giftCertificates = Arrays.asList(GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_3);
+        when(giftCertificateDao.getWithFilters(allRequestParams)).thenReturn(giftCertificates);
+
+        List<GiftCertificate> actual = giftCertificateService.doFilter(allRequestParams);
+
+        assertEquals(giftCertificates, actual);
+    }
+
+    @Test
+    void testDoFilterFindOne() throws DaoException {
+        Map<String, String> allRequestParams = new HashMap<>();
+        allRequestParams.put(TAG_NAME,null);
+        allRequestParams.put(PART_OF_NAME, "giftCertificate1");
+        allRequestParams.put(PART_OF_DESCRIPTION,null);
+        allRequestParams.put(PART_OF_TAG_NAME, null);
+        allRequestParams.put(SORT_BY_NAME,null);
+        allRequestParams.put(SORT_BY_CREATE_DATE, null);
+        allRequestParams.put(SORT_BY_TAG_NAME, null);
+
+        List<GiftCertificate> giftCertificates = Collections.singletonList(GIFT_CERTIFICATE_1);
+        when(giftCertificateDao.getWithFilters(allRequestParams)).thenReturn(giftCertificates);
+
+        List<GiftCertificate> actual = giftCertificateService.doFilter(allRequestParams);
+
+        assertEquals(giftCertificates, actual);
     }
 }

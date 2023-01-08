@@ -37,7 +37,7 @@ public class GiftCertificatesController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificate getById(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException {
+    public GiftCertificate getById(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         return giftCertificateService.getById(id);
     }
 
@@ -48,7 +48,7 @@ public class GiftCertificatesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteGiftCertificate(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException {
+    public ResponseEntity<Long> deleteGiftCertificate(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         giftCertificateService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
     }

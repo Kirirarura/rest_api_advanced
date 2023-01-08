@@ -3,6 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ class TagsServiceImplTest {
     }
 
     @Test
-    void testGetById() throws DaoException, NoSuchEntityException {
+    void testGetById() throws DaoException, NoSuchEntityException, InvalidIdException {
         when(tagDao.getById(TAG_1.getId())).thenReturn(Optional.of(TAG_1));
 
         Tag actual = tagsService.getById(TAG_1.getId());
@@ -56,7 +57,7 @@ class TagsServiceImplTest {
     }
 
     @Test
-    void testDeleteById() throws DaoException, NoSuchEntityException {
+    void testDeleteById() throws DaoException, NoSuchEntityException, InvalidIdException {
         when(tagDao.deleteById(TAG_2.getId())).thenReturn(2L);
         when(tagDao.getById(TAG_2.getId())).thenReturn(Optional.of(TAG_2));
 

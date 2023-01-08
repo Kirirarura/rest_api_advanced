@@ -20,8 +20,8 @@ public interface GiftCertificateService {
 
     Long create(GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, DuplicateEntityException;
     List<GiftCertificate> getAll() throws DaoException;
-    GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException;
-    Long deleteById(Long id) throws NoSuchEntityException, DaoException;
+    GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException;
+    Long deleteById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException;
     Long update(Long id, GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, InvalidIdException;
     List<GiftCertificate> doFilter(Map<String, String> map) throws DaoException;
 }
