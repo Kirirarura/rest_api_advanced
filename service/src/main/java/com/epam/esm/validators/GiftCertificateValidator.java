@@ -37,25 +37,25 @@ public class GiftCertificateValidator {
 
     private static void isNameValid(String name) throws InvalidEntityException {
         if (name == null) {
-            throw new InvalidEntityException("certificate.null");
+            throw new InvalidEntityException("40001");
         }
         if (!(name.length() >= NAME_MIN_LENGTH && name.length() <= NAME_MAX_LENGTH)) {
-            throw new InvalidEntityException("certificate.invalid.name");
+            throw new InvalidEntityException("40002");
         }
     }
 
     private static void isPriceValid(BigDecimal price) throws InvalidEntityException {
         if (price == null) {
-            throw new InvalidEntityException("certificate.null");
+            throw new InvalidEntityException("40001");
         }
         if (!(price.compareTo(PRICE_MIN_VALUE) >= 0 && price.compareTo(PRICE_MAX_VALUE) <= 0)) {
-            throw new InvalidEntityException("certificate.invalid.price");
+            throw new InvalidEntityException("40003");
         }
     }
 
     private static void isDurationValid(int duration) throws InvalidEntityException {
         if ((duration < DURATION_MIN_VALUE)) {
-            throw new InvalidEntityException("certificate.invalid.duration");
+            throw new InvalidEntityException("40004");
         }
     }
 }

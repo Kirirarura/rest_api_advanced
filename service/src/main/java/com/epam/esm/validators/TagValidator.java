@@ -18,10 +18,10 @@ public class TagValidator {
 
     private static void isNameValid(String name) throws InvalidEntityException {
         if (name == null){
-            throw new InvalidEntityException("tag.null");
+            throw new InvalidEntityException("40006");
         }
         if (!(name.length() <= NAME_MAX_LENGTH && name.length() >= NAME_MIN_LENGTH)){
-            throw new InvalidEntityException("tag.invalid.name");
+            throw new InvalidEntityException("40007");
         }
 
     }

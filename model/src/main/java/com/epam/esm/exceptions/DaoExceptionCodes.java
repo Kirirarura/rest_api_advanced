@@ -1,9 +1,8 @@
 package com.epam.esm.exceptions;
 
-public class DaoExceptionMessageCodes {
+public class DaoExceptionCodes {
 
-    private DaoExceptionMessageCodes() {
-    }
+    private DaoExceptionCodes() {}
 
     public static final String NO_ENTITY = "404000";
     public static final String NO_ENTITY_WITH_ID = "404001";
