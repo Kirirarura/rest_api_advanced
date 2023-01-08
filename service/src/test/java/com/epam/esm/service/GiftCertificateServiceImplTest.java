@@ -117,7 +117,7 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void testCheckCertificate() throws DaoException {
-        when(giftCertificateDao.getByName(GIFT_CERTIFICATE_1.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
+        when(giftCertificateDao.findByName(GIFT_CERTIFICATE_1.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
 
         assertEquals(DuplicateEntityException.class, assertThrows(
                 InvocationTargetException.class, () -> getCheckCertificateMethod().invoke(

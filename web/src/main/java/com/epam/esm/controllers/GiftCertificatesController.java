@@ -13,7 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.epam.esm.constants.Constants.*;
 
 @RestController
 @RequestMapping("/certificates")
@@ -55,6 +59,26 @@ public class GiftCertificatesController {
             throws DaoException, InvalidEntityException, InvalidIdException {
         Long resultId = giftCertificateService.update(id, giftCertificateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resultId);
+    }
+
+    @GetMapping(value = "/filter")
+    public List<GiftCertificate> giftCertificatesByParameter(
+            @RequestParam(name = "tagName") String tagName,
+            @RequestParam(name = "partOfName") String partOfName,
+            @RequestParam(name = "partOfDescription") String partOfDescription,
+            @RequestParam(name = "partOfTagName") String partOfTagName,
+            @RequestParam(name = "sortByName") String sortByName,
+            @RequestParam(name = "sortByCreateDate") String sortByCreateDate,
+            @RequestParam(name = "sortByTagName") String sortByTagName) throws DaoException {
+        Map<String, String> allRequestParams = new HashMap<>();
+        allRequestParams.put(TAG_NAME,tagName);
+        allRequestParams.put(PART_OF_NAME, partOfName);
+        allRequestParams.put(PART_OF_DESCRIPTION,partOfDescription);
+        allRequestParams.put(PART_OF_TAG_NAME, partOfTagName);
+        allRequestParams.put(SORT_BY_NAME,sortByName);
+        allRequestParams.put(SORT_BY_CREATE_DATE, sortByCreateDate);
+        allRequestParams.put(SORT_BY_TAG_NAME, sortByTagName);
+        return giftCertificateService.doFilter(allRequestParams);
     }
 
 }

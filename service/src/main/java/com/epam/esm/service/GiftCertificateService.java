@@ -9,7 +9,9 @@ import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
 
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Business logic for Certificates
@@ -21,4 +23,5 @@ public interface GiftCertificateService {
     GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException;
     Long deleteById(Long id) throws NoSuchEntityException, DaoException;
     Long update(Long id, GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, InvalidIdException;
+    List<GiftCertificate> doFilter(Map<String, String> map) throws DaoException;
 }

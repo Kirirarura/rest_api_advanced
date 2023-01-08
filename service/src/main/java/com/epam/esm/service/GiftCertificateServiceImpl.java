@@ -46,7 +46,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.create(giftCertificate, requestTags);
 
         String certificateName = giftCertificate.getName();
-        return giftCertificateDao.getByName(certificateName)
+        return giftCertificateDao.findByName(certificateName)
                 .map(GiftCertificate::getId).orElse(-1L);
     }
 
@@ -56,9 +56,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificateValidator.isValid(giftCertificate);
 
         String name = giftCertificate.getName();
-        Optional<GiftCertificate> optionalName = giftCertificateDao.getByName(name);
+        Optional<GiftCertificate> optionalName = giftCertificateDao.findByName(name);
         if (optionalName.isPresent()){
-            throw new DuplicateEntityException("certificate.already.exist");
+            throw new DuplicateEntityException("40901");
         }
     }
 
@@ -70,7 +70,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException {
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(id);
         if (!optionalGiftCertificate.isPresent()){
-            throw new NoSuchEntityException("certificate.not.found");
+            throw new NoSuchEntityException("40401", id);
         }
         return optionalGiftCertificate.get();
     }
@@ -79,7 +79,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public Long deleteById(Long id) throws NoSuchEntityException, DaoException {
         Optional<GiftCertificate> certificateOptional = giftCertificateDao.getById(id);
         if (!certificateOptional.isPresent()) {
-            throw new NoSuchEntityException("certificate.not.found");
+            throw new NoSuchEntityException("40401");
         }
         giftCertificateDao.deleteById(id);
         return id;
@@ -89,7 +89,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional(rollbackFor = Exception.class)
     public Long update(Long id, GiftCertificateDto giftCertificateDto) throws DaoException, InvalidEntityException, InvalidIdException {
         if (id < 1){
-            throw new InvalidIdException("certificate.invalid.id");
+            throw new InvalidIdException("40005", id);
         }
         GiftCertificate giftCertificate = giftCertificateDto.getGiftCertificate();
         giftCertificateDto.getGiftCertificate().setId(id);
@@ -102,6 +102,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         saveNewTags(requestTags, createdTags);
         giftCertificateDao.update(giftCertificateDto.getGiftCertificate(), requestTags);
         return id;
+    }
+
+    @Override
+    public List<GiftCertificate> doFilter(Map<String, String> map) throws DaoException {
+        return giftCertificateDao.getWithFilters(map);
     }
 
     private void saveNewTags(List<Tag> requestTags, List<Tag> createdTags) throws DaoException {

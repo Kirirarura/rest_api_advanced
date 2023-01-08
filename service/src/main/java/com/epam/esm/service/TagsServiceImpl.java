@@ -31,16 +31,16 @@ public class TagsServiceImpl implements TagsService{
         String tagName = tag.getName();
         tagDao.create(tag);
 
-        return tagDao.getByName(tagName)
+        return tagDao.findByName(tagName)
                 .map(Tag::getId).orElse(-1L);
     }
 
     private void checkTag(Tag tag) throws InvalidEntityException, DuplicateEntityException, DaoException {
         TagValidator.isValid(tag);
         String name = tag.getName();
-        Optional<Tag> optionalName = tagDao.getByName(name);
+        Optional<Tag> optionalName = tagDao.findByName(name);
         if (optionalName.isPresent()){
-            throw new DuplicateEntityException("tag.already.exist");
+            throw new DuplicateEntityException("40902");
         }
     }
 
@@ -53,7 +53,7 @@ public class TagsServiceImpl implements TagsService{
     public Tag getById(Long id) throws NoSuchEntityException, DaoException {
         Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
-            throw new NoSuchEntityException("tag.not.found");
+            throw new NoSuchEntityException("40402");
         }
         return optionalTag.get();
     }
@@ -62,7 +62,7 @@ public class TagsServiceImpl implements TagsService{
     public Long deleteById(Long id) throws NoSuchEntityException, DaoException {
         Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
-            throw new NoSuchEntityException("tag.not.found");
+            throw new NoSuchEntityException("40402");
         }
         tagDao.deleteById(id);
         return id;

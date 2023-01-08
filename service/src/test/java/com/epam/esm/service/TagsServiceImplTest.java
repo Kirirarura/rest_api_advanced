@@ -75,7 +75,7 @@ class TagsServiceImplTest {
 
     @Test
     void testCheckTag() throws DaoException {
-        when(tagDao.getByName(TAG_3.getName())).thenReturn(Optional.of(TAG_3));
+        when(tagDao.findByName(TAG_3.getName())).thenReturn(Optional.of(TAG_3));
 
         assertEquals(DuplicateEntityException.class, assertThrows(
                 InvocationTargetException.class, () -> getCheckTagMethod().invoke(

@@ -26,8 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.epam.esm.exceptions.DaoExceptionMessageCodes.*;
+import static com.epam.esm.exceptions.DaoExceptionCodes.NO_ENTITY_WITH_ID;
+import static com.epam.esm.exceptions.DaoExceptionCodes.SAVING_ERROR;
 
+
+/**
+ * Implementation of daoGift
+ */
 @Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao {
 
@@ -49,8 +54,9 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
 
     private final JdbcTemplate jdbcTemplate;
 
-    public GiftCertificateDaoImpl(TagDao tagDao, GiftCertificateExtractor giftCertificateExtractor, QueryBuilder queryBuilder, JdbcTemplate jdbcTemplate) {
-        super(ROW_MAPPER, TABLE_NAME, jdbcTemplate);
+    public GiftCertificateDaoImpl(TagDao tagDao, GiftCertificateExtractor giftCertificateExtractor,
+                                  QueryBuilder queryBuilder, JdbcTemplate jdbcTemplate) {
+        super(ROW_MAPPER, TABLE_NAME, queryBuilder, jdbcTemplate);
         this.tagDao = tagDao;
         this.giftCertificateExtractor = giftCertificateExtractor;
         this.queryBuilder = queryBuilder;
@@ -79,6 +85,11 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         }
     }
 
+    @Override
+    public Optional<GiftCertificate> findByName(String name) throws DaoException {
+        return findByColumn("name", name);
+    }
+
     private void updateTags(List<Tag> tags, long giftCertificateId) {
         if (tags == null) {
             return;
@@ -97,7 +108,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
             Optional<Tag> tagWithId = Optional.empty();
 
             try {
-                tagWithId = tagDao.getByName(tagName);
+                tagWithId = tagDao.findByName(tagName);
             } catch (DaoException e) {
                 e.printStackTrace();
             }
@@ -108,21 +119,21 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     }
 
     @Override
-    public Optional<GiftCertificate> getByName(String name) throws DaoException {
-        return findByColumn("name", name);
-    }
-
-    @Override
     @Transactional
     public void update(GiftCertificate giftCertificate, List<Tag> certificateTags) throws DaoException {
 
         Map<String, String> updateFields = giftCertificateExtractor.extract(giftCertificate);
         String query = queryBuilder.createUpdateQuery(updateFields, TABLE_NAME);
-        try{
+        try {
             executeUpdateQuery(query);
             updateTags(certificateTags, giftCertificate.getId());
         } catch (DataAccessException e) {
             throw new DaoException(NO_ENTITY_WITH_ID);
         }
+    }
+
+    @Override
+    protected String getTableName() {
+        return TABLE_NAME;
     }
 }

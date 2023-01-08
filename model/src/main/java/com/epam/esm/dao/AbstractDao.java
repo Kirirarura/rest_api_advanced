@@ -1,14 +1,16 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dao.query.QueryBuilder;
 import com.epam.esm.exceptions.DaoException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import static com.epam.esm.exceptions.DaoExceptionMessageCodes.*;
+import static com.epam.esm.exceptions.DaoExceptionCodes.*;
 
 public abstract class AbstractDao<T> {
 
@@ -16,12 +18,14 @@ public abstract class AbstractDao<T> {
     protected final String findByColumnQuery;
     protected final String deleteByIdQuery;
     protected final String getAllQuery;
+    private final QueryBuilder queryBuilder;
     private final RowMapper<T> rowMapper;
     private final JdbcTemplate jdbcTemplate;
     private static final String SELECT_ALL_FROM = "SELECT * FROM ";
 
-    protected AbstractDao(RowMapper<T> rowMapper, String tableName, JdbcTemplate jdbcTemplate) {
+    protected AbstractDao(RowMapper<T> rowMapper, String tableName, QueryBuilder queryBuilder, JdbcTemplate jdbcTemplate) {
         this.rowMapper = rowMapper;
+        this.queryBuilder = queryBuilder;
         this.jdbcTemplate = jdbcTemplate;
 
         getAllQuery = SELECT_ALL_FROM + tableName;
@@ -29,6 +33,7 @@ public abstract class AbstractDao<T> {
         findByColumnQuery = SELECT_ALL_FROM + tableName + " WHERE %s=?";
         deleteByIdQuery = "DELETE FROM " + tableName + " WHERE id=?";
     }
+    protected abstract String getTableName();
 
     public List<T> getAll() throws DaoException {
         try {
@@ -36,7 +41,6 @@ public abstract class AbstractDao<T> {
         } catch (DataAccessException e) {
             throw new DaoException(NO_ENTITY);
         }
-
     }
 
     public Optional<T> getById(Long id) throws DaoException {
@@ -61,7 +65,7 @@ public abstract class AbstractDao<T> {
         try {
             String query = String.format(findByColumnQuery, columnName);
             return jdbcTemplate.query(query, rowMapper, value).stream().findAny();
-        } catch (DataAccessException e) {
+        } catch (DataAccessException e){
             throw new DaoException(NO_ENTITY_WITH_NAME);
         }
 
@@ -71,5 +75,12 @@ public abstract class AbstractDao<T> {
         jdbcTemplate.update(query, params);
     }
 
-
+    public List<T> getWithFilters(Map<String, String> fields) throws DaoException {
+        try {
+            String query = queryBuilder.createGetQuery(fields, getTableName());
+            return jdbcTemplate.query(query, rowMapper);
+        } catch (DataAccessException e) {
+            throw new DaoException(NO_ENTITY_WITH_PARAMETERS);
+        }
+    }
 }

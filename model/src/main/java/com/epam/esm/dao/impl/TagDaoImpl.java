@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.AbstractDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.query.Queries;
+import com.epam.esm.dao.query.QueryBuilder;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exceptions.DaoException;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.epam.esm.exceptions.DaoExceptionMessageCodes.SAVING_ERROR;
+import static com.epam.esm.exceptions.DaoExceptionCodes.*;
 
 
 @Repository
@@ -27,8 +28,8 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     private static final RowMapper<Tag> ROW_MAPPER = new BeanPropertyRowMapper<>(Tag.class);
     private final JdbcTemplate jdbcTemplate;
 
-    public TagDaoImpl(JdbcTemplate jdbcTemplate) {
-        super(ROW_MAPPER, TABLE_NAME, jdbcTemplate);
+    public TagDaoImpl(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
+        super(ROW_MAPPER, TABLE_NAME, queryBuilder, jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -43,7 +44,12 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     }
 
     @Override
-    public Optional<Tag> getByName(String name) throws DaoException {
+    public Optional<Tag> findByName(String name) throws DaoException {
         return findByColumn("name", name);
+    }
+
+    @Override
+    protected String getTableName() {
+        return TABLE_NAME;
     }
 }

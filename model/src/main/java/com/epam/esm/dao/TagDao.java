@@ -14,7 +14,7 @@ public interface TagDao {
 
     Optional<Tag> getById(Long id) throws DaoException;
 
-    Optional<Tag> getByName(String name) throws DaoException;
+    Optional<Tag> findByName(String name) throws DaoException;
 
     Long deleteById(Long id) throws DaoException;
 }
