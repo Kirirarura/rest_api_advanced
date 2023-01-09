@@ -8,6 +8,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exceptions.DaoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +29,7 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     private static final RowMapper<Tag> ROW_MAPPER = new BeanPropertyRowMapper<>(Tag.class);
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public TagDaoImpl(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
         super(ROW_MAPPER, TABLE_NAME, queryBuilder, jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;

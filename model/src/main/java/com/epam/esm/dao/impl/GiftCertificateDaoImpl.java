@@ -11,6 +11,7 @@ import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.extractor.GiftCertificateExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -54,6 +55,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
 
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public GiftCertificateDaoImpl(TagDao tagDao, GiftCertificateExtractor giftCertificateExtractor,
                                   QueryBuilder queryBuilder, JdbcTemplate jdbcTemplate) {
         super(ROW_MAPPER, TABLE_NAME, queryBuilder, jdbcTemplate);
@@ -121,7 +123,6 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     @Override
     @Transactional
     public void update(GiftCertificate giftCertificate, List<Tag> certificateTags) throws DaoException {
-
         Map<String, String> updateFields = giftCertificateExtractor.extract(giftCertificate);
         String query = queryBuilder.createUpdateQuery(updateFields, TABLE_NAME);
         try {

@@ -19,22 +19,22 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:database.properties")
-public class JdbcConfig {
+@PropertySource("classpath:dbConnection.properties")
+public class DBConfig {
 
-    @Value("${dataSource.driverClassName}")
+    @Value("${db.driverClassName}")
     private String driverClass;
 
-    @Value("${dataSource.jdbcUrl}")
+    @Value("${db.jdbcUrl}")
     private String databaseUrl;
 
-    @Value("${dataSource.username}")
+    @Value("${db.username}")
     private String username;
 
-    @Value("${dataSource.password}")
+    @Value("${db.password}")
     private String password;
 
-    @Value("${dataSource.maximumPoolSize}")
+    @Value("${db.maximumPoolSize}")
     private int maxPoolSize;
 
     @Bean
@@ -62,7 +62,6 @@ public class JdbcConfig {
     public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(JdbcTemplate jdbcTemplate) {
         return new NamedParameterJdbcTemplate((jdbcTemplate));
     }
-
     @Bean
     public PlatformTransactionManager txManager(){
         return new DataSourceTransactionManager(dataSource(getHikariConfig()));

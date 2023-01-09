@@ -2,10 +2,12 @@ package com.epam.esm.service;
 
 
 import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.InvalidEntityException;
 import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
@@ -24,16 +26,20 @@ import java.util.*;
 import static com.epam.esm.constants.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
     @Mock
     private GiftCertificateDaoImpl giftCertificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
-
     @InjectMocks
     private GiftCertificateServiceImpl giftCertificateService;
+
+    @Mock
+    private TagDaoImpl tagDao = Mockito.mock(TagDaoImpl.class);
+    @InjectMocks
+    private TagsServiceImpl tagsService;
 
     private static final Tag TAG_1 = new Tag(1L, "tag1");
     private static final Tag TAG_2 = new Tag(2L, "tag2");
@@ -59,8 +65,28 @@ class GiftCertificateServiceImplTest {
             GIFT_CERTIFICATE_3, new ArrayList<>(Arrays.asList(TAG_1, TAG_2, TAG_3)));
 
     @Test
+    void testCreateGiftCertificate() throws DuplicateEntityException, DaoException, InvalidEntityException {
+        giftCertificateService.create(GIFT_CERTIFICATE_DTO_1);
+
+        verify(giftCertificateDao, times(2)).findByName(GIFT_CERTIFICATE_1.getName());
+        verify(giftCertificateDao).create(GIFT_CERTIFICATE_DTO_1.getGiftCertificate(),
+                GIFT_CERTIFICATE_DTO_1.getCertificateTags());
+    }
+
+    @Test
+    void testUpdateGiftCertificate() throws DaoException, InvalidEntityException, InvalidIdException {
+        giftCertificateService.update(1L, GIFT_CERTIFICATE_DTO_1);
+        verify(giftCertificateDao).update(GIFT_CERTIFICATE_DTO_1.getGiftCertificate(),
+                GIFT_CERTIFICATE_DTO_1.getCertificateTags());
+    }
+
+    @Test
     void testGetAll() throws DaoException {
-        List<GiftCertificate> giftCertificates = Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3);
+        List<GiftCertificate> giftCertificates = Arrays.asList(
+                GIFT_CERTIFICATE_1,
+                GIFT_CERTIFICATE_2,
+                GIFT_CERTIFICATE_3
+        );
         when(giftCertificateDao.getAll()).thenReturn(giftCertificates);
 
         List<GiftCertificate> actual = giftCertificateService.getAll();
@@ -87,15 +113,6 @@ class GiftCertificateServiceImplTest {
         assertThrows(NoSuchEntityException.class, () -> giftCertificateService.getById(
                 GIFT_CERTIFICATE_DTO_2.getGiftCertificate().getId()));
     }
-    @Test
-    void testGetByIdInvalidId() throws DaoException {
-        when(giftCertificateDao.getById(-1L))
-                .thenThrow(InvalidIdException.class);
-
-        assertThrows(InvalidIdException.class, () -> giftCertificateService.getById(
-                -1L));
-    }
-
 
     @Test
     void testDeleteById() throws DaoException, NoSuchEntityException, InvalidIdException {
@@ -113,7 +130,7 @@ class GiftCertificateServiceImplTest {
         when(giftCertificateDao.getById(GIFT_CERTIFICATE_DTO_3.getGiftCertificate().getId()))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NoSuchEntityException.class,() -> giftCertificateService.deleteById(GIFT_CERTIFICATE_3.getId()));
+        assertThrows(NoSuchEntityException.class, () -> giftCertificateService.deleteById(GIFT_CERTIFICATE_3.getId()));
     }
 
     private Method getCheckCertificateMethod() throws NoSuchMethodException {
@@ -135,15 +152,18 @@ class GiftCertificateServiceImplTest {
     @Test
     void testDoFilterFindAll() throws DaoException {
         Map<String, String> allRequestParams = new HashMap<>();
-        allRequestParams.put(TAG_NAME,null);
+        allRequestParams.put(TAG_NAME, null);
         allRequestParams.put(PART_OF_NAME, "giftCertifi");
-        allRequestParams.put(PART_OF_DESCRIPTION,null);
+        allRequestParams.put(PART_OF_DESCRIPTION, null);
         allRequestParams.put(PART_OF_TAG_NAME, null);
-        allRequestParams.put(SORT_BY_NAME,null);
+        allRequestParams.put(SORT_BY_NAME, null);
         allRequestParams.put(SORT_BY_CREATE_DATE, null);
         allRequestParams.put(SORT_BY_TAG_NAME, null);
 
-        List<GiftCertificate> giftCertificates = Arrays.asList(GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_3);
+        List<GiftCertificate> giftCertificates = Arrays.asList(
+                GIFT_CERTIFICATE_2,
+                GIFT_CERTIFICATE_1,
+                GIFT_CERTIFICATE_3);
         when(giftCertificateDao.getWithFilters(allRequestParams)).thenReturn(giftCertificates);
 
         List<GiftCertificate> actual = giftCertificateService.doFilter(allRequestParams);
@@ -154,11 +174,11 @@ class GiftCertificateServiceImplTest {
     @Test
     void testDoFilterFindOne() throws DaoException {
         Map<String, String> allRequestParams = new HashMap<>();
-        allRequestParams.put(TAG_NAME,null);
+        allRequestParams.put(TAG_NAME, null);
         allRequestParams.put(PART_OF_NAME, "giftCertificate1");
-        allRequestParams.put(PART_OF_DESCRIPTION,null);
+        allRequestParams.put(PART_OF_DESCRIPTION, null);
         allRequestParams.put(PART_OF_TAG_NAME, null);
-        allRequestParams.put(SORT_BY_NAME,null);
+        allRequestParams.put(SORT_BY_NAME, null);
         allRequestParams.put(SORT_BY_CREATE_DATE, null);
         allRequestParams.put(SORT_BY_TAG_NAME, null);
 

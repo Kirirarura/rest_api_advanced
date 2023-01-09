@@ -3,6 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.InvalidEntityException;
 import com.epam.esm.exception.InvalidIdException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.DaoException;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +38,11 @@ class TagsServiceImplTest {
     private static final Tag TAG_2 = new Tag(2L, "tag2");
     private static final Tag TAG_3 = new Tag(3L, "tag3");
 
+    @Test
+    void testCreateTag() throws DuplicateEntityException, DaoException, InvalidEntityException {
+        tagsService.create(TAG_1);
+        verify(tagDao).create(TAG_1);
+    }
 
     @Test
     void testGetAll() throws DaoException {
@@ -57,6 +64,13 @@ class TagsServiceImplTest {
     }
 
     @Test
+    void testGetByIdOptionalEmpty() throws DaoException {
+        when(tagDao.getById(TAG_1.getId())).thenReturn(Optional.empty());
+        assertThrows(NoSuchEntityException.class, () -> tagsService.getById(
+                TAG_1.getId()));
+    }
+
+    @Test
     void testDeleteById() throws DaoException, NoSuchEntityException, InvalidIdException {
         when(tagDao.deleteById(TAG_2.getId())).thenReturn(2L);
         when(tagDao.getById(TAG_2.getId())).thenReturn(Optional.of(TAG_2));
@@ -65,6 +79,13 @@ class TagsServiceImplTest {
         Long expected = 2L;
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testDeleteByIdOptionalEmpty() throws DaoException {
+        when(tagDao.getById(TAG_1.getId())).thenReturn(Optional.empty());
+        assertThrows(NoSuchEntityException.class, () -> tagsService.deleteById(
+                TAG_1.getId()));
     }
 
     private Method getCheckTagMethod() throws NoSuchMethodException {
