@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Class that contains language configurations for a web project
+ */
 @Configuration
 public class LanguageConfig extends AcceptHeaderLocaleResolver implements WebMvcConfigurer {
     List<Locale> LOCALES = Arrays.asList(

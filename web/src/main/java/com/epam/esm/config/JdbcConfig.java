@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+/**
+ * Class that contains jdbc configurations for a web project
+ */
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:database.properties")

@@ -82,7 +82,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         IdValidator.checkForInvalidId(id);
         Optional<GiftCertificate> certificateOptional = giftCertificateDao.getById(id);
         if (!certificateOptional.isPresent()) {
-            throw new NoSuchEntityException("40401");
+            throw new NoSuchEntityException("40401", id);
         }
         giftCertificateDao.deleteById(id);
         return id;

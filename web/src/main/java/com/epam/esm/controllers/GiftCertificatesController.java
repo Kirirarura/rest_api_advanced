@@ -19,6 +19,9 @@ import java.util.Map;
 
 import static com.epam.esm.constants.Constants.*;
 
+/**
+ * Controller responsible for all operations with gift certificates.
+ */
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificatesController {
@@ -30,29 +33,72 @@ public class GiftCertificatesController {
         this.giftCertificateService = giftCertificateService;
     }
 
+    /**
+     * Method for getting all gift certificates.
+     *
+     * @return List of gift certificates.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     */
     @GetMapping
     public List<GiftCertificate> getAll() throws DaoException {
         return giftCertificateService.getAll();
     }
 
+    /**
+     * Method for getting gift certificate by id.
+     *
+     * @param id ID of gift certificate to be returned.
+     * @return Gift certificate object.
+     * @throws NoSuchEntityException An exception that thrown in case gift certificate with provided id not found.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificate getById(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         return giftCertificateService.getById(id);
     }
 
+    /**
+     * Method for creating gift certificate.
+     *
+     * @param giftCertificateDto DTO object that contains gift certificate and related tags.
+     * @return Gift certificate object with provided ID.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     * @throws DuplicateEntityException An exception that thrown in case gift certificate is already presented in DB.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
+     */
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody GiftCertificateDto giftCertificateDto) throws DaoException, DuplicateEntityException, InvalidEntityException {
         Long id = giftCertificateService.create(giftCertificateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
+    /**
+     * Method for deleting gift certificate.
+     *
+     * @param id ID of gift certificate to be deleted.
+     * @return ID of deleted gift certificate.
+     * @throws NoSuchEntityException An exception that thrown in case gift certificate with provided ID not found.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteGiftCertificate(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         giftCertificateService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
+    /**
+     * Method for gift certificate updating.
+     *
+     * @param id ID of gift certificate to be updated.
+     * @param giftCertificateDto DTO for gift certificate update.
+     * @return ID of updated gift certificate.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
+     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<Long> updateGiftCertificate(@PathVariable("id") Long id,
                                                       @RequestBody GiftCertificateDto giftCertificateDto)
@@ -61,6 +107,12 @@ public class GiftCertificatesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(resultId);
     }
 
+    /**
+     * Method for getting gift certificates according to search filters.
+     *
+     * @return List of gift certificates got with filters.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     */
     @GetMapping(value = "/filter")
     public List<GiftCertificate> giftCertificatesByParameter(
             @RequestParam(name = "tagName") String tagName,

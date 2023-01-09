@@ -1,5 +1,8 @@
 package com.epam.esm.exceptions;
 
+/**
+ * Class for accessing error codes and messages.
+ */
 public class ErrorResponse {
 
     private String errorCode;

@@ -5,6 +5,9 @@ import com.epam.esm.exception.InvalidEntityException;
 
 import java.math.BigDecimal;
 
+/**
+ * Class validator that checks provided gift certificate.
+ */
 public class GiftCertificateValidator {
 
     private static final int NAME_MAX_LENGTH = 80;
@@ -16,12 +19,24 @@ public class GiftCertificateValidator {
     private GiftCertificateValidator() {
     }
 
+    /**
+     * Method for validating gift certificate.
+     *
+     * @param giftCertificate Provided gift certificate object.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
+     */
     public static void isValid(GiftCertificate giftCertificate) throws InvalidEntityException {
         isNameValid(giftCertificate.getName());
         isPriceValid(giftCertificate.getPrice());
         isDurationValid(giftCertificate.getDuration());
     }
 
+    /**
+     * Method for validating gift certificate for update.
+     *
+     * @param giftCertificate Provided gift certificate object for update.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
+     */
     public static void isValidForUpdate(GiftCertificate giftCertificate) throws InvalidEntityException {
         if (giftCertificate.getName() != null) {
             isNameValid(giftCertificate.getName());
@@ -35,6 +50,12 @@ public class GiftCertificateValidator {
     }
 
 
+    /**
+     * Method for checking gift certificate name.
+     *
+     * @param name Provided gift certificate name.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate name is invalid.
+     */
     private static void isNameValid(String name) throws InvalidEntityException {
         if (name == null) {
             throw new InvalidEntityException("40001");
@@ -44,6 +65,12 @@ public class GiftCertificateValidator {
         }
     }
 
+    /**
+     * Method for checking gift certificate price.
+     *
+     * @param price Provided gift certificate price.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate price is invalid.
+     */
     private static void isPriceValid(BigDecimal price) throws InvalidEntityException {
         if (price == null) {
             throw new InvalidEntityException("40001");
@@ -53,6 +80,12 @@ public class GiftCertificateValidator {
         }
     }
 
+    /**
+     * Method for checking gift certificate duration.
+     *
+     * @param duration Provided gift certificate duration.
+     * @throws InvalidEntityException An exception that thrown in case provided gift certificate duration is invalid.
+     */
     private static void isDurationValid(int duration) throws InvalidEntityException {
         if ((duration < DURATION_MIN_VALUE)) {
             throw new InvalidEntityException("40004");

@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Hello world Controller
+ */
+
 @RestController
 @RequestMapping("/")
 public class GreetingsController {

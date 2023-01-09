@@ -3,6 +3,9 @@ package com.epam.esm.validators;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.InvalidEntityException;
 
+/**
+ * Class validator that checks provided Tag.
+ */
 public class TagValidator {
 
     private TagValidator() {
@@ -16,6 +19,12 @@ public class TagValidator {
     }
 
 
+    /**
+     * Method for checking tag name.
+     *
+     * @param name Name of provided tag.
+     * @throws InvalidEntityException An exception that thrown in case provided name size not fitting in range.
+     */
     private static void isNameValid(String name) throws InvalidEntityException {
         if (name == null){
             throw new InvalidEntityException("40006");

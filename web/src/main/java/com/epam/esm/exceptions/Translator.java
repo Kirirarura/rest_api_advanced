@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
+/**
+ * Class to localize messages.
+ */
 @Component
 public class Translator {
 

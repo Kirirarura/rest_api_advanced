@@ -12,6 +12,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import static org.springframework.http.HttpStatus.*;
 
+/**
+ * An Exception Handler, responsible for displaying error code and messages.
+ */
 @RestControllerAdvice
 public class GenericExceptionHandler {
 
@@ -41,6 +44,9 @@ public class GenericExceptionHandler {
     @ExceptionHandler(InvalidIdException.class)
     public final ResponseEntity<Object> handleInvalidIdException(InvalidIdException ex){
         StringBuilder details = new StringBuilder(Translator.toLocale(ex.getLocalizedMessage()));
+        if (ex.getId() != null){
+            details.append(", id: ").append(ex.getId());
+        }
         ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.toString(), details);
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
@@ -50,7 +56,7 @@ public class GenericExceptionHandler {
     public final ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException ex){
         StringBuilder details = new StringBuilder(Translator.toLocale(ex.getLocalizedMessage()));
         if (ex.getId() != null){
-            details.append(", with id: ").append(ex.getId());
+            details.append(", id: ").append(ex.getId());
         }
         String code = ex.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(code, details);
