@@ -50,8 +50,8 @@ public class GiftCertificatesController {
      * @param id ID of gift certificate to be returned.
      * @return Gift certificate object.
      * @throws NoSuchEntityException An exception that thrown in case gift certificate with provided id not found.
-     * @throws DaoException An exception that thrown in case of data access errors.
-     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     * @throws DaoException          An exception that thrown in case of data access errors.
+     * @throws InvalidIdException    An exception that thrown in case provided ID is invalid.
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -64,9 +64,9 @@ public class GiftCertificatesController {
      *
      * @param giftCertificateDto DTO object that contains gift certificate and related tags.
      * @return Gift certificate object with provided ID.
-     * @throws DaoException An exception that thrown in case of data access errors.
+     * @throws DaoException             An exception that thrown in case of data access errors.
      * @throws DuplicateEntityException An exception that thrown in case gift certificate is already presented in DB.
-     * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
+     * @throws InvalidEntityException   An exception that thrown in case provided gift certificate is invalid.
      */
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody GiftCertificateDto giftCertificateDto) throws DaoException, DuplicateEntityException, InvalidEntityException {
@@ -80,8 +80,8 @@ public class GiftCertificatesController {
      * @param id ID of gift certificate to be deleted.
      * @return ID of deleted gift certificate.
      * @throws NoSuchEntityException An exception that thrown in case gift certificate with provided ID not found.
-     * @throws DaoException An exception that thrown in case of data access errors.
-     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     * @throws DaoException          An exception that thrown in case of data access errors.
+     * @throws InvalidIdException    An exception that thrown in case provided ID is invalid.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteGiftCertificate(@PathVariable("id") Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
@@ -92,12 +92,12 @@ public class GiftCertificatesController {
     /**
      * Method for gift certificate updating.
      *
-     * @param id ID of gift certificate to be updated.
+     * @param id                 ID of gift certificate to be updated.
      * @param giftCertificateDto DTO for gift certificate update.
      * @return ID of updated gift certificate.
-     * @throws DaoException An exception that thrown in case of data access errors.
+     * @throws DaoException           An exception that thrown in case of data access errors.
      * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
-     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     * @throws InvalidIdException     An exception that thrown in case provided ID is invalid.
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Long> updateGiftCertificate(@PathVariable("id") Long id,
@@ -123,11 +123,11 @@ public class GiftCertificatesController {
             @RequestParam(name = "sortByCreateDate") String sortByCreateDate,
             @RequestParam(name = "sortByTagName") String sortByTagName) throws DaoException {
         Map<String, String> allRequestParams = new HashMap<>();
-        allRequestParams.put(TAG_NAME,tagName);
+        allRequestParams.put(TAG_NAME, tagName);
         allRequestParams.put(PART_OF_NAME, partOfName);
-        allRequestParams.put(PART_OF_DESCRIPTION,partOfDescription);
+        allRequestParams.put(PART_OF_DESCRIPTION, partOfDescription);
         allRequestParams.put(PART_OF_TAG_NAME, partOfTagName);
-        allRequestParams.put(SORT_BY_NAME,sortByName);
+        allRequestParams.put(SORT_BY_NAME, sortByName);
         allRequestParams.put(SORT_BY_CREATE_DATE, sortByCreateDate);
         allRequestParams.put(SORT_BY_TAG_NAME, sortByTagName);
         return giftCertificateService.doFilter(allRequestParams);

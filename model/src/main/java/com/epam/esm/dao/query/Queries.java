@@ -1,5 +1,8 @@
 package com.epam.esm.dao.query;
 
+/**
+ * Class that contains all queries.
+ */
 public class Queries {
 
     private Queries() {

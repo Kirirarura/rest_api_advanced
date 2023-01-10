@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -27,7 +26,7 @@ public class GenericExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateEntityException.class)
-    public final ResponseEntity<Object> handleDuplicateEntityException(DuplicateEntityException ex){
+    public final ResponseEntity<Object> handleDuplicateEntityException(DuplicateEntityException ex) {
         StringBuilder details = new StringBuilder(Translator.toLocale(ex.getLocalizedMessage()));
         String code = ex.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(code, details);
@@ -35,16 +34,16 @@ public class GenericExceptionHandler {
     }
 
     @ExceptionHandler(InvalidEntityException.class)
-    public final ResponseEntity<Object> handleInvalidEntityException(InvalidEntityException ex){
+    public final ResponseEntity<Object> handleInvalidEntityException(InvalidEntityException ex) {
         StringBuilder details = new StringBuilder(Translator.toLocale(ex.getLocalizedMessage()));
         ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.toString(), details);
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidIdException.class)
-    public final ResponseEntity<Object> handleInvalidIdException(InvalidIdException ex){
+    public final ResponseEntity<Object> handleInvalidIdException(InvalidIdException ex) {
         StringBuilder details = new StringBuilder(Translator.toLocale(ex.getLocalizedMessage()));
-        if (ex.getId() != null){
+        if (ex.getId() != null) {
             details.append(", id: ").append(ex.getId());
         }
         ErrorResponse errorResponse = new ErrorResponse(BAD_REQUEST.toString(), details);
@@ -53,9 +52,9 @@ public class GenericExceptionHandler {
 
 
     @ExceptionHandler(NoSuchEntityException.class)
-    public final ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException ex){
+    public final ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException ex) {
         StringBuilder details = new StringBuilder(Translator.toLocale(ex.getLocalizedMessage()));
-        if (ex.getId() != null){
+        if (ex.getId() != null) {
             details.append(", id: ").append(ex.getId());
         }
         String code = ex.getMessage();

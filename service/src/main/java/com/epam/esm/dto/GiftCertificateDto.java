@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that represents an object that carries data between processes.
+ */
 public class GiftCertificateDto {
 
     private GiftCertificate giftCertificate;

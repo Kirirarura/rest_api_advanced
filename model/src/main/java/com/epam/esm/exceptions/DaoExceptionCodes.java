@@ -1,5 +1,8 @@
 package com.epam.esm.exceptions;
 
+/**
+ * Class contains custom error codes.
+ */
 public class DaoExceptionCodes {
 
     private DaoExceptionCodes() {}

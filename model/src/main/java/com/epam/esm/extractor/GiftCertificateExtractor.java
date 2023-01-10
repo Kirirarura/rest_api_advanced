@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class designed to extract fields from gift certificate object to a map.
+ */
 @Component
 public class GiftCertificateExtractor {
 

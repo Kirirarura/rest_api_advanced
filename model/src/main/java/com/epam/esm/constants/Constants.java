@@ -2,7 +2,7 @@ package com.epam.esm.constants;
 
 
 /**
- * Class container for constants like filter parameters and DB columns
+ * Class container for constants like filter parameters
  */
 public class Constants {
 

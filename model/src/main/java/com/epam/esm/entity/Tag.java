@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.Objects;
 
+/**
+ * Entity that represents Tag.
+ */
 public class Tag {
     private Long id;
     private String name;

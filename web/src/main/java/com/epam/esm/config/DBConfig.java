@@ -49,7 +49,7 @@ public class DBConfig {
     }
 
     @Bean
-    public DataSource dataSource(HikariConfig hikariConfig){
+    public DataSource dataSource(HikariConfig hikariConfig) {
         return new HikariDataSource(hikariConfig);
     }
 
@@ -62,8 +62,9 @@ public class DBConfig {
     public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(JdbcTemplate jdbcTemplate) {
         return new NamedParameterJdbcTemplate((jdbcTemplate));
     }
+
     @Bean
-    public PlatformTransactionManager txManager(){
+    public PlatformTransactionManager txManager() {
         return new DataSourceTransactionManager(dataSource(getHikariConfig()));
     }
 

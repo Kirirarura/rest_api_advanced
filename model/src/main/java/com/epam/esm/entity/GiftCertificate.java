@@ -3,6 +3,9 @@ package com.epam.esm.entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * Entity that represents gift certificate.
+ */
 public class GiftCertificate {
 
     private Long id;

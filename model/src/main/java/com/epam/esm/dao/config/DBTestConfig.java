@@ -12,6 +12,9 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
 
+/**
+ * Class that contains configurations for test database
+ */
 @Configuration
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:dbConnection.properties")

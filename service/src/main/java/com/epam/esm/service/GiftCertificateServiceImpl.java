@@ -17,9 +17,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 
+/**
+ * Implementation of interface responsible for business logic of Gift Certificates.
+ */
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
@@ -31,6 +37,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.giftCertificateDao = giftCertificateDao;
         this.tagDao = tagDao;
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -51,6 +58,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .map(GiftCertificate::getId).orElse(-1L);
     }
 
+    /**
+     * Gift certificate validation.
+     *
+     * @param giftCertificate Provided gift certificate object.
+     * @throws DaoException             An exception that thrown in case of data access errors.
+     * @throws InvalidEntityException   An exception that thrown in case provided gift certificate is invalid.
+     * @throws DuplicateEntityException An exception that thrown in case gift certificate is already presented in DB.
+     */
     private void checkCertificate(GiftCertificate giftCertificate)
             throws InvalidEntityException, DuplicateEntityException, DaoException {
 
@@ -58,7 +73,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         String name = giftCertificate.getName();
         Optional<GiftCertificate> optionalName = giftCertificateDao.findByName(name);
-        if (optionalName.isPresent()){
+        if (optionalName.isPresent()) {
             throw new DuplicateEntityException("40901");
         }
     }
@@ -67,15 +82,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateDao.getAll();
     }
 
+
     @Override
     public GiftCertificate getById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
         IdValidator.checkForInvalidId(id);
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.getById(id);
-        if (!optionalGiftCertificate.isPresent()){
+        if (!optionalGiftCertificate.isPresent()) {
             throw new NoSuchEntityException("40401", id);
         }
         return optionalGiftCertificate.get();
     }
+
 
     @Override
     public Long deleteById(Long id) throws NoSuchEntityException, DaoException, InvalidIdException {
@@ -87,6 +104,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.deleteById(id);
         return id;
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -104,7 +122,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDao.update(giftCertificateDto.getGiftCertificate(), requestTags);
         return id;
     }
-
 
 
     @Override

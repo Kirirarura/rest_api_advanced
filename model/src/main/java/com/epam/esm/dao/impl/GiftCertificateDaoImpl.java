@@ -9,8 +9,6 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exceptions.DaoException;
 import com.epam.esm.extractor.GiftCertificateExtractor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,12 +30,11 @@ import static com.epam.esm.exceptions.DaoExceptionCodes.SAVING_ERROR;
 
 
 /**
- * Implementation of daoGift
+ * Class implementation of interface {@link GiftCertificateDao} designed to work with gift certificate table.
  */
 @Repository
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao {
 
-    private static final Logger log = LoggerFactory.getLogger(GiftCertificateDaoImpl.class);
     private static final String TABLE_NAME = "gift_certificates";
     private final TagDao tagDao;
     private final GiftCertificateExtractor giftCertificateExtractor;
@@ -82,7 +79,6 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
             }, keyHolder);
             updateTags(tags, keyHolder.getKey().intValue());
         } catch (DataAccessException e) {
-            log.error("Failed to create Certificate, cause: {}", e.getMessage());
             throw new DaoException(SAVING_ERROR);
         }
     }

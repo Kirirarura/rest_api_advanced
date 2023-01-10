@@ -8,9 +8,19 @@ import java.util.StringJoiner;
 
 import static com.epam.esm.constants.Constants.*;
 
+/**
+ * Utility class, designed to build a query to update database and retrieve info from database according to some filters.
+ */
 @Component
 public class QueryBuilder {
 
+    /**
+     * Method to build an update query.
+     *
+     * @param updateFields Map with update fields.
+     * @param tableName Name of table.
+     * @return String of query for update.
+     */
     public String createUpdateQuery(Map<String, String> updateFields, String tableName){
         StringJoiner joiner = new StringJoiner(",");
         for (Map.Entry<String, String> entry : updateFields.entrySet()) {
@@ -21,6 +31,13 @@ public class QueryBuilder {
         return "UPDATE " + tableName + " SET " + joiner + " WHERE id=" + updateFields.get("id");
     }
 
+    /**
+     * Method to retrieve info from database according to some filters.
+     *
+     * @param fields Map with filters.
+     * @param tableName Name of table.
+     * @return String of query for select with filters.
+     */
     public String createGetQuery(Map<String, String> fields, String tableName) {
         StringBuilder query = new StringBuilder("SELECT * FROM " + tableName);
         if (Objects.equals(tableName, "gift_certificates")) {

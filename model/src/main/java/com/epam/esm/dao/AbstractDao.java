@@ -12,6 +12,9 @@ import java.util.Optional;
 
 import static com.epam.esm.exceptions.DaoExceptionCodes.*;
 
+/**
+ * Class designed to implement basic operations with database.
+ */
 public abstract class AbstractDao<T> {
 
     protected final String findByIdQuery;
@@ -71,10 +74,23 @@ public abstract class AbstractDao<T> {
 
     }
 
+    /**
+     * Method for executing a query in the database to update objects.
+     *
+     * @param query  query to execute
+     * @param params parameters involved in the request
+     */
     protected void executeUpdateQuery(String query, Object... params) {
         jdbcTemplate.update(query, params);
     }
 
+    /**
+     * Method to get gift certificate entities according to specific parameters and filters.
+     *
+     * @param fields Map with filters.
+     * @return List of gift certificates.
+     * @throws DaoException An exception that thrown in case of data access errors.
+     */
     public List<T> getWithFilters(Map<String, String> fields) throws DaoException {
         try {
             String query = queryBuilder.createGetQuery(fields, getTableName());

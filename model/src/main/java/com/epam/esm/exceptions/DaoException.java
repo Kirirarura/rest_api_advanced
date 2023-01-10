@@ -1,5 +1,8 @@
 package com.epam.esm.exceptions;
 
+/**
+ * An Exception that thrown in case Dao layer encounters DataAccessException while processing request to DB.
+ */
 public class DaoException extends Exception{
     public DaoException() {
     }

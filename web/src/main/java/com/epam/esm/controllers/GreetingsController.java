@@ -16,7 +16,7 @@ import java.util.List;
 public class GreetingsController {
 
     @GetMapping
-    public List<String> greetings(){
+    public List<String> greetings() {
         List<String> list = new ArrayList<>();
         list.add("Hello");
         list.add("Spring");

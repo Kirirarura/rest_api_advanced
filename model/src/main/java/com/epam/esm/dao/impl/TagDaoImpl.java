@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.AbstractDao;
+import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.query.Queries;
 import com.epam.esm.dao.query.QueryBuilder;
@@ -20,6 +21,9 @@ import java.util.Optional;
 import static com.epam.esm.exceptions.DaoExceptionCodes.*;
 
 
+/**
+ * Class implementation of interface {@link TagDao} designed to work with tag table.
+ */
 @Repository
 public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
 

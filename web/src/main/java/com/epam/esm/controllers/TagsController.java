@@ -45,8 +45,8 @@ public class TagsController {
      * @param id ID of tag to be returned.
      * @return Tag object.
      * @throws NoSuchEntityException An exception that thrown in case gift certificate with provided id not found.
-     * @throws DaoException An exception that thrown in case of data access errors.
-     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     * @throws DaoException          An exception that thrown in case of data access errors.
+     * @throws InvalidIdException    An exception that thrown in case provided ID is invalid.
      */
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -55,10 +55,12 @@ public class TagsController {
     }
 
     /**
+     * Method for creating tag.
+     *
      * @param tag Tag object to be created.
      * @return ID of created tag.
-     * @throws DaoException An exception that thrown in case of data access errors.
-     * @throws InvalidEntityException An exception that thrown in case provided gift certificate is invalid.
+     * @throws DaoException             An exception that thrown in case of data access errors.
+     * @throws InvalidEntityException   An exception that thrown in case provided gift certificate is invalid.
      * @throws DuplicateEntityException An exception that thrown in case gift certificate is already presented in DB.
      */
     @PostMapping
@@ -70,11 +72,12 @@ public class TagsController {
 
     /**
      * Method for deleting tag.
+     *
      * @param id ID of tag to be deleted.
      * @return ID of deleted tag.
      * @throws NoSuchEntityException An exception that thrown in case gift certificate with provided id not found.
-     * @throws DaoException An exception that thrown in case of data access errors.
-     * @throws InvalidIdException An exception that thrown in case provided ID is invalid.
+     * @throws DaoException          An exception that thrown in case of data access errors.
+     * @throws InvalidIdException    An exception that thrown in case provided ID is invalid.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteById(@PathVariable Long id) throws NoSuchEntityException, DaoException, InvalidIdException {

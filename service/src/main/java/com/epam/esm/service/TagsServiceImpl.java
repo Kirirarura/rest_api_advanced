@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of interface responsible for business logic of Tags.
+ */
 @Service
 public class TagsServiceImpl implements TagsService{
 
@@ -56,7 +59,7 @@ public class TagsServiceImpl implements TagsService{
         IdValidator.checkForInvalidId(id);
         Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
-            throw new NoSuchEntityException("40402");
+            throw new NoSuchEntityException("40402", id);
         }
         return optionalTag.get();
     }
@@ -66,7 +69,7 @@ public class TagsServiceImpl implements TagsService{
         IdValidator.checkForInvalidId(id);
         Optional<Tag> optionalTag = tagDao.getById(id);
         if (!optionalTag.isPresent()) {
-            throw new NoSuchEntityException("40402");
+            throw new NoSuchEntityException("40402", id);
         }
         tagDao.deleteById(id);
         return id;
