@@ -1,59 +1,29 @@
 package com.epam.esm.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Objects;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Entity that represents Tag.
  */
-public class Tag {
+@Entity
+@Table(name = "tags")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Audited
+public class Tag implements Serializable {
+    @Id
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name")
     private String name;
 
-    @JsonCreator
-    public Tag() {
-    }
-
-    public Tag(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return getId().equals(tag.getId()) && Objects.equals(getName(), tag.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName());
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

@@ -1,31 +1,28 @@
 package com.epam.esm.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Value;
+import org.springframework.http.HttpStatus;
+
 /**
  * Class for accessing error codes and messages.
  */
+@Value
 public class ErrorResponse {
 
-    private String errorCode;
-    private StringBuilder errorMessage;
+    int errorCode;
+    String errorMessage;
 
-    public ErrorResponse(String errorCode, StringBuilder errorMessage) {
-        this.errorCode = errorCode;
+    @JsonIgnore
+    HttpStatus httpStatus;
+
+    public ErrorResponse(HttpStatus httpStatus, String errorMessage) {
+        this.errorCode = calcHttpStatus(httpStatus);
         this.errorMessage = errorMessage;
+        this.httpStatus = httpStatus;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public StringBuilder getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(StringBuilder errorMessage) {
-        this.errorMessage = errorMessage;
+    private int calcHttpStatus(HttpStatus httpStatus){
+        return httpStatus.value() * 1000 + 10 % 1000;
     }
 }
