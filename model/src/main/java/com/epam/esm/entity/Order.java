@@ -7,16 +7,16 @@ import lombok.ToString;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "orders")
 @Data
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Audited
-public class Order {
+public class Order implements Serializable {
     @Id
     @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

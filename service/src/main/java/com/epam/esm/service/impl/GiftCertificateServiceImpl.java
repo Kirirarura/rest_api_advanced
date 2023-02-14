@@ -9,10 +9,9 @@ import com.epam.esm.request.GiftCertificateCreateRequest;
 import com.epam.esm.request.GiftCertificatePriceUpdateRequest;
 import com.epam.esm.request.GiftCertificateUpdateRequest;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.util.PaginationHelper;
+import com.epam.esm.service.impl.util.PaginationHelper;
 import com.epam.esm.validation.FilterParamsValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.epam.esm.dao.query.FilterParams.*;
+
 
 
 @Service

@@ -22,13 +22,11 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class GenericExceptionHandler {
 
-
-//    @ExceptionHandler(DataAccessException.class)
-//    public final ResponseEntity<ErrorResponse> handleDataAccessException() {
-//        String message = Translator.toLocale("exception.DataAccessException.message");
-//
-//        return getResponseEntity(new ErrorResponse(INTERNAL_SERVER_ERROR, message));
-//    }
+    @ExceptionHandler(DataAccessException.class)
+    public final ResponseEntity<ErrorResponse> handleDataAccessException() {
+        String message = Translator.toLocale("exception.DataAccessException.message");
+        return getResponseEntity(new ErrorResponse(INTERNAL_SERVER_ERROR, message));
+    }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public final ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
@@ -56,12 +54,12 @@ public class GenericExceptionHandler {
         return getResponseEntity(response);
     }
 
-//    @ExceptionHandler({RuntimeException.class, Exception.class})
-//    public final ResponseEntity<ErrorResponse> handleUnmappedException() {
-//        String message = Translator.toLocale("exception.unmapped-exception.message");
-//
-//        return getResponseEntity(new ErrorResponse(INTERNAL_SERVER_ERROR, message));
-//    }
+    @ExceptionHandler({RuntimeException.class, Exception.class})
+    public final ResponseEntity<ErrorResponse> handleUnmappedException() {
+        String message = Translator.toLocale("exception.unmapped-exception.message");
+
+        return getResponseEntity(new ErrorResponse(INTERNAL_SERVER_ERROR, message));
+    }
 
     private ResponseEntity<ErrorResponse> getResponseEntity(ErrorResponse errorResponse) {
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());

@@ -29,21 +29,15 @@ public class GiftCertificate implements Serializable {
     private Long id;
 
     @Column(name = "name")
-    @NonNull
-    @Size(min = 4, max = 40, message = "Size of gift certificate name is invalid; min = 4, max = 40")
     private String name;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "price")
-    @NonNull
-    @Min(value = 1, message = "Price of gift certificate is invalid; min = 1")
     private BigDecimal price;
 
     @Column(name = "duration")
-    @NonNull
-    @Min(value = 1, message = "Duration of gift certificate is invalid; min = 1")
     private int duration;
 
     @Column(name = "create_date")

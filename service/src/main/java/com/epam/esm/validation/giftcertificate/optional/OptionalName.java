@@ -14,7 +14,7 @@ import static java.lang.annotation.ElementType.*;
 @Documented
 public @interface OptionalName {
     //error message
-    String message() default "Invalid color: must be RED, GREEN or BLUE";
+    String message() default "";
     //represents group of constraints
     Class<?>[] groups() default {};
     //represents additional information about annotation

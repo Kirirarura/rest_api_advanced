@@ -9,10 +9,9 @@ import com.epam.esm.entity.User;
 import com.epam.esm.exception.*;
 import com.epam.esm.request.OrderCreateRequest;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.util.PaginationHelper;
+import com.epam.esm.service.impl.util.PaginationHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

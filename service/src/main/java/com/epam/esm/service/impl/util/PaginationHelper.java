@@ -1,4 +1,4 @@
-package com.epam.esm.service.util;
+package com.epam.esm.service.impl.util;
 
 import com.epam.esm.exception.ExceptionMessageKey;
 import com.epam.esm.exception.ExceptionResult;

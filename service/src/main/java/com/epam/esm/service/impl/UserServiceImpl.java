@@ -5,9 +5,8 @@ import com.epam.esm.entity.User;
 import com.epam.esm.exception.ExceptionMessageKey;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.util.PaginationHelper;
+import com.epam.esm.service.impl.util.PaginationHelper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
