@@ -1,5 +1,7 @@
 package com.epam.esm.exceptions.handler;
 
+import com.epam.esm.exception.DuplicateEntityException;
+import com.epam.esm.exception.IncorrectParameterException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.exceptions.ErrorResponse;
 import com.epam.esm.exceptions.util.Translator;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -44,6 +47,21 @@ public class GenericExceptionHandler {
             message.append(", id: ").append(ex.getId());
         }
         return getResponseEntity(new ErrorResponse(BAD_REQUEST, String.valueOf(message)));
+    }
+
+    @ExceptionHandler(DuplicateEntityException.class)
+    public final ResponseEntity<ErrorResponse> handleDuplicateEntityException(DuplicateEntityException ex){
+        String message = Translator.toLocale(ex.getLocalizedMessage());
+        return getResponseEntity(new ErrorResponse(BAD_REQUEST, message));
+    }
+
+    @ExceptionHandler(IncorrectParameterException.class)
+    public final ResponseEntity<ErrorResponse> handleIncorrectParameterException(IncorrectParameterException ex){
+        StringBuilder result = new StringBuilder();
+        for (Map.Entry<String,Object[]> entry: ex.getExceptionResult().getExceptionMessages().entrySet()){
+            result.append(Translator.toLocale(entry.getKey())).append("; ");
+        }
+        return getResponseEntity(new ErrorResponse(BAD_REQUEST, String.valueOf(result)));
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
