@@ -10,8 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.epam.esm.dao.query.Queries.*;
+import static com.epam.esm.dao.query.Queries.FIND_BY_USER_ID_QUERY;
 
+/**
+ * Implementation of OrderDao interface to perform basic actions with database.
+ * Mainly, actions with Orders.
+ */
 @Repository
 @Transactional
 public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {

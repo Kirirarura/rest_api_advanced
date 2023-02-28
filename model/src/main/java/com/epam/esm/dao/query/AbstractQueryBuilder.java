@@ -6,7 +6,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static com.epam.esm.dao.query.FilterParams.*;
 
@@ -17,7 +19,6 @@ public abstract class AbstractQueryBuilder<T> implements QueryBuilder<T>{
 
     private static final String PERCENT = "%";
     private static final String DESCRIPTION = "description";
-    private static final String CREATE_DATE = "create_date";
 
     protected List<Predicate> addName(MultiValueMap<String, String> fields, CriteriaBuilder criteriaBuilder, Root<T> root) {
         List<Predicate> restrictions = new ArrayList<>();
@@ -59,19 +60,6 @@ public abstract class AbstractQueryBuilder<T> implements QueryBuilder<T>{
             }
             if (Objects.equals(sortType, SortType.ASC.getSortTypeName())) {
                 criteriaQuery.orderBy(criteriaBuilder.asc(root.get(NAME)));
-            }
-        }
-    }
-
-    protected void addSortByCreateDate(MultiValueMap<String, String> fields, CriteriaBuilder criteriaBuilder,
-                                       CriteriaQuery<T> criteriaQuery, Root<T> root) {
-        String sortType = getSingleMultiValueMapParameter(fields, SORT_BY_CREATE_DATE);
-        if (sortType != null) {
-            if (Objects.equals(sortType, SortType.DESC.getSortTypeName())) {
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(CREATE_DATE)));
-            }
-            if (Objects.equals(sortType, SortType.ASC.getSortTypeName())) {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(CREATE_DATE)));
             }
         }
     }

@@ -3,7 +3,6 @@ package com.epam.esm.hateoas;
 import com.epam.esm.controllers.GiftCertificatesController;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.entity.GiftCertificate;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
@@ -14,6 +13,9 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * HATEOAS module for Gift Certificate entity.
+ */
 @Component
 @RequiredArgsConstructor
 public class GiftCertificateHateoas implements RepresentationModelAssembler<GiftCertificate, GiftCertificateDto> {

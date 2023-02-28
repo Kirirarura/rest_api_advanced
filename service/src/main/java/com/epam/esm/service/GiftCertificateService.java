@@ -17,4 +17,5 @@ public interface GiftCertificateService {
             throws NoSuchEntityException;
     GiftCertificate update(Long id, GiftCertificatePriceUpdateRequest updateRequest);
     List<GiftCertificate> doFilter(MultiValueMap<String, String> requestParams, int page, int size);
+    void fillData();
 }

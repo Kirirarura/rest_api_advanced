@@ -8,5 +8,5 @@ public interface TagService{
     Tag create(TagCreateRequest request);
     Tag getById(Long id);
     void deleteById(Long id);
-    Tag getMostPopularTagOfUserWithHighestCostOfAllOrders();
+    Tag getMostPopularTagOfUserWithHighestCostOfAllOrders(Long id);
 }

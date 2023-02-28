@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * Controller responsible for all operations with users.
+ */
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor

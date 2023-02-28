@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controller responsible for all operations with orders.
+ */
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -44,6 +47,11 @@ public class OrderController {
                                                     @RequestParam(value = "size", defaultValue = "5", required = false) int size) {
         List<Order> orders = orderService.getOrdersByUserId(userId, page, size);
         return orderHateoas.toCollectionModel(orders);
+    }
+
+    @PostMapping("/fillData")
+    public void fillData(){
+        orderService.fillData();
     }
 
 }

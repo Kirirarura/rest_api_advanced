@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.math.BigDecimal;
 
@@ -13,12 +14,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Relation(collectionRelation = "orders", itemRelation = "order")
 public class OrderDto extends RepresentationModel<OrderDto> {
-    private long id;
+    private Long id;
     private BigDecimal price;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private String purchaseDate;
-    private long userId;
-    private long giftCertificateId;
+    private Long userId;
+    private Long giftCertificateId;
 }

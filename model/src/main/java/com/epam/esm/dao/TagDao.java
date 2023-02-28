@@ -2,7 +2,6 @@ package com.epam.esm.dao;
 
 import com.epam.esm.entity.Tag;
 
-
 import java.util.Optional;
 
 /**
@@ -17,5 +16,5 @@ public interface TagDao extends CRDDao<Tag>{
      * @return Optional of Tag entity.
      */
     Optional<Tag> findByName(String name);
-    Optional<Tag> findMostPopularTagOfUserWithHighestCostOfAllOrders();
+    Optional<Tag> findMostPopularTagOfUserWithHighestCostOfAllOrders(Long id);
 }

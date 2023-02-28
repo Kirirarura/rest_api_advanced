@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+
+/**
+ * Implementation of GiftCertificateDao interface to perform basic actions with database.
+ * Mainly, actions with Gift Certificates.
+ */
 @Repository
 @Transactional
 public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao{
-
 
     private final QueryBuilder<GiftCertificate> queryBuilder;
     @Autowired
@@ -19,7 +23,6 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         super(GiftCertificate.class);
         this.queryBuilder = queryBuilder;
     }
-
 
     @Override
     public GiftCertificate update(GiftCertificate item) {

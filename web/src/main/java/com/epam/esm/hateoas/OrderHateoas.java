@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * HATEOAS module for Order entity.
+ */
 @Component
 @RequiredArgsConstructor
 public class OrderHateoas implements RepresentationModelAssembler<Order, OrderDto> {

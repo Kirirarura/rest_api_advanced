@@ -2,11 +2,11 @@ package com.epam.esm.request;
 
 import com.epam.esm.validation.tag.Name;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @AllArgsConstructor
 public class TagCreateRequest {
   @Name
-  private String name;
+  String name;
 }

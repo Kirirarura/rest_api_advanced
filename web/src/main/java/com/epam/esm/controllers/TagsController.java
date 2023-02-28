@@ -1,8 +1,6 @@
 package com.epam.esm.controllers;
 
 import com.epam.esm.dto.TagDto;
-
-import com.epam.esm.entity.Tag;
 import com.epam.esm.hateoas.TagHateoas;
 import com.epam.esm.request.TagCreateRequest;
 import com.epam.esm.service.TagService;
@@ -39,14 +37,14 @@ public class TagsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteTag(@PathVariable Long id) {
+    public ResponseEntity<TagDto> deleteTag(@PathVariable Long id) {
         tagService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/popular/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TagDto mostPopularTagOfUserWithHighestCostOfAllOrders() {
-        return tagHateoas.toModel(tagService.getMostPopularTagOfUserWithHighestCostOfAllOrders());
+    public TagDto mostPopularTagOfUserWithHighestCostOfAllOrders(@PathVariable Long id) {
+        return tagHateoas.toModel(tagService.getMostPopularTagOfUserWithHighestCostOfAllOrders(id));
     }
 }

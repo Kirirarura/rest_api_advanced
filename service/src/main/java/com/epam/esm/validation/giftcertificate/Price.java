@@ -23,9 +23,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Price {
     String message() default "";
 
-    //represents group of constraints
     Class<?>[] groups() default {};
 
-    //represents additional information about annotation
     Class<? extends Payload>[] payload() default {};
 }

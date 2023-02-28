@@ -6,17 +6,15 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 
 @Length(min = 4,max = 80)
 @Target({ElementType.TYPE_USE, METHOD, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface OptionalName {
-    //error message
     String message() default "";
-    //represents group of constraints
     Class<?>[] groups() default {};
-    //represents additional information about annotation
     Class<? extends Payload>[] payload() default {};
 }

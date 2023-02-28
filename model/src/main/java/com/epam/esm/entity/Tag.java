@@ -1,10 +1,7 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,9 +11,12 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "tags")
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode
 @Audited
 public class Tag implements Serializable {
     @Id

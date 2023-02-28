@@ -55,8 +55,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag getMostPopularTagOfUserWithHighestCostOfAllOrders() {
-        Optional<Tag> optionalTag = tagDao.findMostPopularTagOfUserWithHighestCostOfAllOrders();
+    public Tag getMostPopularTagOfUserWithHighestCostOfAllOrders(Long id) {
+        Optional<Tag> optionalTag = tagDao.findMostPopularTagOfUserWithHighestCostOfAllOrders(id);
         if (!optionalTag.isPresent()) {
             throw new NoSuchEntityException(TAG_NOT_FOUND);
         }

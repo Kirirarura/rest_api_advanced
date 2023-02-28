@@ -38,8 +38,11 @@ public class GiftCertificatesController {
         return giftCertificateHateoas.toModel(giftCertificateService.getById(id));
     }
 
-
-
+    @PostMapping("/fillData")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createGiftCertificates(){
+        giftCertificateService.fillData();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,7 +70,7 @@ public class GiftCertificatesController {
         return ResponseEntity.ok(giftCertificateDTO);
     }
 
-    @PatchMapping("/{id}/price")
+    @PatchMapping("/price/{id}")
     public ResponseEntity<GiftCertificateDto> updateGiftCertificatePrice(
             @PathVariable Long id,
             @Valid @RequestBody GiftCertificatePriceUpdateRequest request) {

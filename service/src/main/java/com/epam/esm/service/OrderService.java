@@ -12,4 +12,6 @@ public interface OrderService {
     Order create(OrderCreateRequest request);
 
     List<Order> getOrdersByUserId(Long userId, int page, int size);
+
+    void fillData();
 }

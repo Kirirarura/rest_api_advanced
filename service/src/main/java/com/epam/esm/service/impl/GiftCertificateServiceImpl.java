@@ -17,14 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
+import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
-
-import static com.epam.esm.dao.query.FilterParams.*;
-
 
 
 @Service
@@ -54,7 +50,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new DuplicateEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_EXIST);
         }
 
-        List<Tag> tags = checkRequestedTags(request);
+        List<Tag> tags = checkRequestedTags(request.getTags());
 
         GiftCertificate giftCertificate = new GiftCertificate(null, request.getName(),
                 request.getDescription(), request.getPrice(), request.getDuration(), String.valueOf(Instant.now()),
@@ -65,8 +61,29 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
+    public void fillData() {
+        for (int i = 1; i <= 10000; i++) {
+            List<Tag> tags;
+            if (i > 1000) {
+                tags = Arrays.asList(new Tag(null, "Tag " + (i % 1000)));
+            } else {
+                tags = Arrays.asList(new Tag(null, "Tag " + i));
+            }
+            List<Tag> checkedTags = checkRequestedTags(tags);
+            GiftCertificate giftCertificate = new GiftCertificate(
+                    null, "Gift certificate " + i, "Description " + i,
+                    BigDecimal.valueOf(Math.random()),
+                    (int) Math.round(Math.random()),
+                    String.valueOf(Instant.now()), String.valueOf(Instant.now()), checkedTags);
+            giftCertificateDao.insert(giftCertificate);
+        }
+    }
+
+    @Override
+    @Transactional
     public void deleteById(Long id) {
         giftCertificateDao.findById(id).orElseThrow(getNoSuchGiftCertificateException(id));
+        giftCertificateDao.removeById(id);
     }
 
     @Override
@@ -76,6 +93,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .orElseThrow(getNoSuchGiftCertificateException(id));
 
         handleUpdateRequest(giftCertificate, updateRequest);
+        giftCertificate.setLastUpdateDate(String.valueOf(Instant.now()));
 
         return giftCertificateDao.update(giftCertificate);
     }
@@ -87,6 +105,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .orElseThrow(getNoSuchGiftCertificateException(id));
 
         giftCertificate.setPrice(updateRequest.getPrice());
+        giftCertificate.setLastUpdateDate(String.valueOf(Instant.now()));
+
         return giftCertificateDao.update(giftCertificate);
     }
 
@@ -94,25 +114,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public List<GiftCertificate> doFilter(MultiValueMap<String, String> requestParams, int page, int size) {
         ExceptionResult exceptionResult = new ExceptionResult();
 
-        String name = getSingleRequestParameter(requestParams, NAME);
-        if (name != null){
-            FilterParamsValidator.validateGiftCertificateName(name, exceptionResult);
-        }
+        FilterParamsValidator.validateFilterParams(requestParams, exceptionResult);
 
-        List<String> tagNames = requestParams.get(TAG_NAME);
-        if (tagNames != null) {
-            for (String tagName : tagNames) {
-                FilterParamsValidator.validateTagName(tagName, exceptionResult);
-            }
-        }
-        String sortNameType = getSingleRequestParameter(requestParams, SORT_BY_NAME);
-        if (sortNameType != null) {
-            FilterParamsValidator.validateSortType(sortNameType.toUpperCase(), exceptionResult);
-        }
-        String sortCreateDateType = getSingleRequestParameter(requestParams, SORT_BY_CREATE_DATE);
-        if (sortCreateDateType != null) {
-            FilterParamsValidator.validateSortType(sortCreateDateType.toUpperCase(), exceptionResult);
-        }
         if (!exceptionResult.getExceptionMessages().isEmpty()) {
             throw new IncorrectParameterException(exceptionResult);
         }
@@ -122,32 +125,25 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
 
-    private List<Tag> checkRequestedTags(GiftCertificateCreateRequest request) {
+    private List<Tag> checkRequestedTags(List<Tag> requestedTags) {
         List<Tag> tagsToPersist = new ArrayList<>();
-        List<Tag> requestedTags = request.getTags();
         removeDuplicateTags(requestedTags);
-        if (requestedTags != null) {
-            for (Tag tag : requestedTags) {
-                Optional<Tag> tagOptional = tagDao.findByName(tag.getName());
-                if (tagOptional.isPresent()) {
-                    tagsToPersist.add(tagOptional.get());
-                } else {
-                    tagsToPersist.add(tag);
-                }
+
+        for (Tag tag : requestedTags) {
+            Optional<Tag> tagOptional = tagDao.findByName(tag.getName());
+            if (tagOptional.isPresent()) {
+                tagsToPersist.add(tagOptional.get());
+            } else {
+                tagsToPersist.add(tag);
             }
         }
         return tagsToPersist;
     }
 
     private void removeDuplicateTags(List<Tag> tags) {
-        if (tags != null) {
-            List<Tag> result = new ArrayList<>();
-            for (Tag tag : tags) {
-                if (!result.contains(tag)) {
-                    result.add(tag);
-                }
-            }
-        }
+        Set<Tag> set = new HashSet<>(tags);
+        tags.clear();
+        tags.addAll(set);
     }
 
     private void handleUpdateRequest(GiftCertificate giftCertificate, GiftCertificateUpdateRequest updateRequest) {
@@ -169,15 +165,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
 
         if (updateRequest.isTagsPresent()) {
-            giftCertificate.setTags(updateRequest.getTags());
-        }
-    }
-
-    protected String getSingleRequestParameter(MultiValueMap<String, String> requestParams, String parameter) {
-        if (requestParams.containsKey(parameter)) {
-            return requestParams.get(parameter).get(0);
-        } else {
-            return null;
+            List<Tag> tagsToUpdate = checkRequestedTags(updateRequest.getTags());
+            giftCertificate.getTags().addAll(tagsToUpdate);
+            removeDuplicateTags(giftCertificate.getTags());
         }
     }
 }

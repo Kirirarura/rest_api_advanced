@@ -5,15 +5,18 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Entity that represents user.
+ */
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Audited
 public class User implements Serializable {
 
@@ -22,18 +25,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "last_name")
     private String lastName;
 
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
-
-    public User(Long id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 }

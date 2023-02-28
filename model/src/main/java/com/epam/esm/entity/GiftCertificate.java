@@ -1,14 +1,9 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,9 +13,12 @@ import java.util.List;
  */
 @Entity
 @Table(name = "gift_certificates")
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode
 @Audited
 public class GiftCertificate implements Serializable {
     @Id

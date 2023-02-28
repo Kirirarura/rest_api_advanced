@@ -1,20 +1,23 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+/**
+ * Entity that represents order.
+ */
 @Entity
 @Table(name = "orders")
-@Data
+@Getter
+@Setter
+@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Audited
 public class Order implements Serializable {
     @Id
@@ -22,10 +25,10 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "purchase_date", nullable = false)
+    @Column(name = "purchase_date")
     private String purchaseDate;
 
     @ManyToOne

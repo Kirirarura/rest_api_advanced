@@ -14,7 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.epam.esm.dao.query.FilterParams.*;
+import static com.epam.esm.dao.query.FilterParams.NAME;
+import static com.epam.esm.dao.query.FilterParams.TAG_NAME;
 
 @Component
 public class GiftCertificateQueryBuilder extends AbstractQueryBuilder<GiftCertificate> {
@@ -34,7 +35,6 @@ public class GiftCertificateQueryBuilder extends AbstractQueryBuilder<GiftCertif
         restrictions.addAll(addPartOfDescription(fields, criteriaBuilder, giftCertificateRoot));
         criteriaQuery.select(giftCertificateRoot).where(restrictions.toArray(new Predicate[]{}));
         addSortByName(fields, criteriaBuilder, criteriaQuery, giftCertificateRoot);
-        addSortByCreateDate(fields, criteriaBuilder, criteriaQuery, giftCertificateRoot);
 
         return criteriaQuery;
     }
