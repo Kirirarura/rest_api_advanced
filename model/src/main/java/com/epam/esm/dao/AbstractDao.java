@@ -1,102 +1,83 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.query.QueryBuilder;
-import com.epam.esm.exceptions.DaoException;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.MultiValueMap;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import static com.epam.esm.exceptions.DaoExceptionCodes.*;
 
 /**
  * Class designed to implement basic operations with database.
  */
+@Repository
 public abstract class AbstractDao<T> {
+    @PersistenceContext
+    protected EntityManager entityManager;
+    protected final Class<T> entityType;
 
-    protected final String findByIdQuery;
-    protected final String findByColumnQuery;
-    protected final String deleteByIdQuery;
-    protected final String getAllQuery;
-    private final QueryBuilder queryBuilder;
-    private final RowMapper<T> rowMapper;
-    private final JdbcTemplate jdbcTemplate;
-    private static final String SELECT_ALL_FROM = "SELECT * FROM ";
+    protected abstract QueryBuilder<T> getQueryCreator();
 
-    protected AbstractDao(RowMapper<T> rowMapper, String tableName, QueryBuilder queryBuilder, JdbcTemplate jdbcTemplate) {
-        this.rowMapper = rowMapper;
-        this.queryBuilder = queryBuilder;
-        this.jdbcTemplate = jdbcTemplate;
-
-        getAllQuery = SELECT_ALL_FROM + tableName;
-        findByIdQuery = SELECT_ALL_FROM + tableName + " WHERE id=?";
-        findByColumnQuery = SELECT_ALL_FROM + tableName + " WHERE %s=?";
-        deleteByIdQuery = "DELETE FROM " + tableName + " WHERE id=?";
-    }
-    protected abstract String getTableName();
-
-    public List<T> getAll() throws DaoException {
-        try {
-            return jdbcTemplate.query(getAllQuery, rowMapper);
-        } catch (DataAccessException e) {
-            throw new DaoException(NO_ENTITY);
-        }
+    protected AbstractDao(Class<T> entityType) {
+        this.entityType = entityType;
     }
 
-    public Optional<T> getById(Long id) throws DaoException {
-        try {
-            return jdbcTemplate.query(findByIdQuery, rowMapper, id)
-                    .stream().findAny();
-        } catch (DataAccessException e) {
-            throw new DaoException(NO_ENTITY_WITH_ID);
-        }
+    public Optional<T> findById(Long id) {
+        return Optional.ofNullable(entityManager.find(entityType, id));
     }
 
-    public Long deleteById(Long id) throws DaoException {
-        try {
-            jdbcTemplate.update(deleteByIdQuery, id);
-        } catch (DataAccessException e) {
-            throw new DaoException(NO_ENTITY_WITH_ID);
-        }
-        return id;
+    public List<T> findAll(Pageable pageable) {
+        return entityManager.createQuery("SELECT e FROM " + entityType.getSimpleName() + " e", entityType)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
     }
 
-    public Optional<T> findByColumn(String columnName, String value) throws DaoException {
-        try {
-            String query = String.format(findByColumnQuery, columnName);
-            return jdbcTemplate.query(query, rowMapper, value).stream().findAny();
-        } catch (DataAccessException e){
-            throw new DaoException(NO_ENTITY_WITH_NAME);
-        }
-
+    public void removeById(Long id) {
+        T entity = entityManager.find(entityType, id);
+        entityManager.remove(entity);
     }
 
     /**
-     * Method for executing a query in the database to update objects.
+     * Method that inserts given entity into corresponding table in database.
+     * Uses entityManager to persist an entity.
      *
-     * @param query  query to execute
-     * @param params parameters involved in the request
+     * @param entity Entity to be inserted in database.
+     * @return Entity that was inserted in database.
      */
-    protected void executeUpdateQuery(String query, Object... params) {
-        jdbcTemplate.update(query, params);
+    public T insert(T entity) {
+        entityManager.persist(entity);
+        return entity;
+    }
+
+    public Optional<T> findByName(String name) {
+        return entityManager.createQuery("SELECT e FROM " + entityType.getSimpleName() +
+                        " e WHERE e.name = :name", entityType)
+                .setParameter("name", name)
+                .getResultList().stream()
+                .findFirst();
     }
 
     /**
-     * Method to get gift certificate entities according to specific parameters and filters.
+     * Method that returns filtered List of entities.
+     * Accepts MultiValueMap with filtering parameters and creates CriteriaQuery.
      *
-     * @param fields Map with filters.
-     * @return List of gift certificates.
-     * @throws DaoException An exception that thrown in case of data access errors.
+     * @param fields MultiValueMap with filtering parameters.
+     * @param pageable PageRequest with size and page parameters.
+     * @return List of entities.
      */
-    public List<T> getWithFilters(Map<String, String> fields) throws DaoException {
-        try {
-            String query = queryBuilder.createGetQuery(fields, getTableName());
-            return jdbcTemplate.query(query, rowMapper);
-        } catch (DataAccessException e) {
-            throw new DaoException(NO_ENTITY_WITH_PARAMETERS);
-        }
+    public List<T> findWithFilters(MultiValueMap<String, String> fields, Pageable pageable) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = getQueryCreator().createGetQuery(fields, criteriaBuilder);
+
+        return entityManager.createQuery(criteriaQuery)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
     }
 }

@@ -1,61 +1,59 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.AbstractDao;
-import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dao.query.Queries;
 import com.epam.esm.dao.query.QueryBuilder;
+import com.epam.esm.entity.Order;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exceptions.DaoException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.Optional;
-
-import static com.epam.esm.exceptions.DaoExceptionCodes.*;
 
 
 /**
- * Class implementation of interface {@link TagDao} designed to work with tag table.
+ * Implementation of TagDao interface to perform basic actions with database.
+ * Mainly, actions with Tags.
  */
 @Repository
+@Transactional
 public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
 
-    private static final Logger log = LoggerFactory.getLogger(TagDaoImpl.class);
-
-    private static final String TABLE_NAME = "tags";
-    private static final RowMapper<Tag> ROW_MAPPER = new BeanPropertyRowMapper<>(Tag.class);
-    private final JdbcTemplate jdbcTemplate;
+    private final QueryBuilder<Tag> queryBuilder;
 
     @Autowired
-    public TagDaoImpl(JdbcTemplate jdbcTemplate, QueryBuilder queryBuilder) {
-        super(ROW_MAPPER, TABLE_NAME, queryBuilder, jdbcTemplate);
-        this.jdbcTemplate = jdbcTemplate;
+    public TagDaoImpl(QueryBuilder<Tag> queryBuilder) {
+        super(Tag.class);
+        this.queryBuilder = queryBuilder;
     }
 
     @Override
-    public void create(Tag tag) throws DaoException {
-        try {
-            jdbcTemplate.update(Queries.CREATE_TAG, tag.getName());
-        } catch (DataAccessException e) {
-            log.error("Failed to create Tag, cause: {}", e.getMessage());
-            throw new DaoException(SAVING_ERROR);
-        }
+    protected QueryBuilder<Tag> getQueryCreator() {
+        return queryBuilder;
     }
 
     @Override
-    public Optional<Tag> findByName(String name) throws DaoException {
-        return findByColumn("name", name);
-    }
+    public Optional<Tag> findMostPopularTagOfUserWithHighestCostOfAllOrders(Long id) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
+        Root<Order> root = criteriaQuery.from(Order.class);
 
-    @Override
-    protected String getTableName() {
-        return TABLE_NAME;
+        Join<Tag, Order> tagOrderJoin = root.join("giftCertificate").join("tags");
+
+        criteriaQuery.select(root.get("giftCertificate").get("tags"))
+                .where(criteriaBuilder.equal(root.get("user").get("id"), id))
+                .groupBy(tagOrderJoin.get("id"))
+                .orderBy(criteriaBuilder.desc(criteriaBuilder.count(tagOrderJoin.get("id"))),
+                        criteriaBuilder.desc(criteriaBuilder.sum(root.get("price"))));
+
+        return entityManager.createQuery(criteriaQuery)
+                .setMaxResults(1)
+                .getResultStream()
+                .findFirst();
     }
 }
