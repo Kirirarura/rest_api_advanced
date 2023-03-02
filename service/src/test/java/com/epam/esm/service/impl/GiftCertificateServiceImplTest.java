@@ -119,20 +119,19 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void updateWithGiftCertificateUpdateRequest() {
-        GiftCertificate giftCertificateOriginal = getGiftCertificate();
+        GiftCertificate giftCertificate = getGiftCertificate();
         GiftCertificateUpdateRequest updateRequest = new GiftCertificateUpdateRequest("New name",
-                "New description", BigDecimal.valueOf(10.34), 20, getTags());
+                null, null, 20, null);
 
-        GiftCertificate giftCertificateModified = getGiftCertificate();
-        giftCertificateModified.setName(updateRequest.getName());
-        giftCertificateModified.setDuration(updateRequest.getDuration());
+        giftCertificate.setName(updateRequest.getName());
+        giftCertificate.setDuration(updateRequest.getDuration());
 
-        when(giftCertificateDao.findById(giftCertificateOriginal.getId()))
-                .thenReturn(Optional.of(giftCertificateOriginal));
-        when(giftCertificateDao.update(notNull())).thenAnswer(returnsFirstArg());
+        when(giftCertificateDao.findById(giftCertificate.getId()))
+                .thenReturn(Optional.of(giftCertificate));
 
+        when(giftCertificateDao.update(giftCertificate)).thenAnswer(returnsFirstArg());
         assertEquals(updateRequest.getName(),
-                giftCertificateService.update(giftCertificateOriginal.getId(), updateRequest).getName());
+                giftCertificateService.update(giftCertificate.getId(), updateRequest).getName());
     }
 
     @Test

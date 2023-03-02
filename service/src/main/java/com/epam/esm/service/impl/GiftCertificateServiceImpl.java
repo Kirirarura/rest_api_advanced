@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -127,9 +128,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private List<Tag> checkRequestedTags(List<Tag> requestedTags) {
         List<Tag> tagsToPersist = new ArrayList<>();
-        removeDuplicateTags(requestedTags);
+        List<Tag> requestedTagsWithoutDuplicates = removeDuplicateTags(requestedTags);
 
-        for (Tag tag : requestedTags) {
+        for (Tag tag : requestedTagsWithoutDuplicates) {
             Optional<Tag> tagOptional = tagDao.findByName(tag.getName());
             if (tagOptional.isPresent()) {
                 tagsToPersist.add(tagOptional.get());
@@ -140,10 +141,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return tagsToPersist;
     }
 
-    private void removeDuplicateTags(List<Tag> tags) {
-        Set<Tag> set = new HashSet<>(tags);
-        tags.clear();
-        tags.addAll(set);
+    private List<Tag> removeDuplicateTags(List<Tag> tags) {
+        return tags.stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private void handleUpdateRequest(GiftCertificate giftCertificate, GiftCertificateUpdateRequest updateRequest) {
@@ -167,7 +168,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (updateRequest.isTagsPresent()) {
             List<Tag> tagsToUpdate = checkRequestedTags(updateRequest.getTags());
             giftCertificate.getTags().addAll(tagsToUpdate);
-            removeDuplicateTags(giftCertificate.getTags());
+            giftCertificate.setTags(removeDuplicateTags(giftCertificate.getTags()));
         }
     }
 }
